@@ -1429,9 +1429,40 @@ function drawUI() {
 }
 
 function drawTouchButtons() {
-  const alphaVal = 0; // hidden on desktop/web
-  if (alphaVal === 0) return;
-  // touch buttons omitted — TMA handles touch natively
+  if (G.showMainMenu || G.showStats || G.gameOver) return;
+  const alpha = 0.35;
+
+  // Fire button (bottom-left circle)
+  const fx = 65, fy = H - 55, fr = 50;
+  ctx.fillStyle = `rgba(255,255,255,${alpha*0.5})`;
+  ctx.beginPath(); ctx.arc(fx, fy, fr, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = `rgba(255,255,255,${alpha*0.6})`; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(fx, fy, fr, 0, Math.PI*2); ctx.stroke();
+  ctx.font='28px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle = `rgba(255,255,255,${alpha+0.3})`;
+  ctx.fillText('🔥', fx, fy);
+
+  // Bomb button (bottom-right)
+  const bx = W - 55, by = H - 55, br = 40;
+  const bombActive = G.powerupsActive.bomb;
+  ctx.fillStyle = `rgba(255,165,0,${alpha*0.8 + (bombActive?0.3:0)})`;
+  ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = `rgba(255,255,255,${alpha*0.5})`; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(bx, by, br, 0, Math.PI*2); ctx.stroke();
+  ctx.font='26px sans-serif';
+  ctx.fillStyle = `rgba(255,255,255,${alpha+0.3})`;
+  ctx.fillText('💥', bx, by);
+
+  // Barrier button (right side, above bomb)
+  const rbx = W - 55, rby = H - 140, rbr = 40;
+  const barrierActive = G.powerupsActive.barrier;
+  ctx.fillStyle = `rgba(0,200,255,${alpha*0.8 + (barrierActive?0.3:0)})`;
+  ctx.beginPath(); ctx.arc(rbx, rby, rbr, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = `rgba(255,255,255,${alpha*0.5})`; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(rbx, rby, rbr, 0, Math.PI*2); ctx.stroke();
+  ctx.font='26px sans-serif';
+  ctx.fillStyle = `rgba(255,255,255,${alpha+0.3})`;
+  ctx.fillText('🛡', rbx, rby);
 }
 
 function drawMainMenu() {
@@ -1484,28 +1515,30 @@ function drawStats() {
 
 function drawGameOver() {
   rectFilled(W/2, H/2, W, H, [0,0,0,0.8]);
+  // Use offsets relative to actual screen center
+  const cy = H/2 - 20; // shift up a bit to account for UI bar
   if (G.victory) {
-    ctx.fillStyle='rgb(255,215,0)'; ctx.font='38px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText('🏆 Молодец!', W/2, H/2+60);
-    ctx.fillStyle='rgba(255,215,0,0.7)'; ctx.font='16px sans-serif';
-    ctx.fillText('Ты справился со своими фобиями!', W/2, H/2+25);
+    ctx.fillStyle='rgb(255,215,0)'; ctx.font='34px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('🏆 Молодец!', W/2, cy+40);
+    ctx.fillStyle='rgba(255,215,0,0.7)'; ctx.font='14px sans-serif';
+    ctx.fillText('Ты справился со своими фобиями!', W/2, cy+15);
   } else {
-    ctx.fillStyle='rgb(255,23,68)'; ctx.font='44px sans-serif';
-    ctx.fillText('💀 Тьма победила', W/2, H/2+60);
+    ctx.fillStyle='rgb(255,23,68)'; ctx.font='40px sans-serif';
+    ctx.fillText('💀 Тьма победила', W/2, cy+40);
   }
-  ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.font='18px sans-serif';
-  ctx.fillText(`Ты справился с ${G.score} страхами`, W/2, H/2+10);
-  ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='16px sans-serif';
-  ctx.fillText(`Уровень: ${G.level}`, W/2, H/2-20);
+  ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.font='16px sans-serif';
+  ctx.fillText(`Ты справился с ${G.score} страхами`, W/2, cy+5);
+  ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='14px sans-serif';
+  ctx.fillText(`Уровень: ${G.level}`, W/2, cy-20);
 
   const buttons = [
-    {text:'🔄 Ещё раз', x:W/2-80, y:H/2-80},
-    {text:'🏠 В меню', x:W/2+80, y:H/2-80},
+    {text:'🔄 Ещё раз', x:W/2-80, y:cy-70},
+    {text:'🏠 В меню', x:W/2+80, y:cy-70},
   ];
   buttons.forEach(b => {
     const isFirst = b.text.includes('Ещё');
-    rectFilled(b.x, b.y, 130, 45, isFirst?[108,92,231]:[255,255,255,0.08]);
-    ctx.fillStyle='#fff'; ctx.font='16px sans-serif';
+    rectFilled(b.x, b.y, 130, 40, isFirst?[108,92,231]:[255,255,255,0.08]);
+    ctx.fillStyle='#fff'; ctx.font='15px sans-serif';
     ctx.fillText(b.text, b.x, b.y);
   });
 }
@@ -1567,8 +1600,9 @@ canvas.addEventListener('mousedown', e => {
     return;
   }
   if (G.gameOver) {
-    if (G.mouseX>W/2-145 && G.mouseX<W/2-15 && G.mouseY>H/2-100 && G.mouseY<H/2-55) restartGame();
-    if (G.mouseX>W/2+15 && G.mouseX<W/2+145 && G.mouseY>H/2-100 && G.mouseY<H/2-55) goToMenu();
+    const goCy = H/2 - 20;
+    if (G.mouseX>W/2-145 && G.mouseX<W/2-15 && G.mouseY>goCy-90 && G.mouseY<goCy-50) restartGame();
+    if (G.mouseX>W/2+15 && G.mouseX<W/2+145 && G.mouseY>goCy-90 && G.mouseY<goCy-50) goToMenu();
     return;
   }
   G.pointerDown = true;
@@ -1591,20 +1625,20 @@ canvas.addEventListener('touchstart', e => {
     return;
   }
 
-  // Fire zone (left bottom)
-  if (tx < 120 && ty > H-120) {
+  // Fire button (bottom-left circle at 65, H-55, r=50)
+  if (Math.hypot(tx-65, ty-(H-55)) < 50) {
     G.touchFireId = touch.identifier;
     shoot();
     return;
   }
-  // Bomb button (right)
-  if (tx > W-80 && ty < H && ty > H-90) {
+  // Bomb button (bottom-right circle at W-55, H-55, r=40)
+  if (Math.hypot(tx-(W-55), ty-(H-55)) < 40) {
     G.touchBombId = touch.identifier;
     activateBomb();
     return;
   }
-  // Barrier button
-  if (tx > W-80 && ty < H-90 && ty > H-180) {
+  // Barrier button (right circle at W-55, H-140, r=40)
+  if (Math.hypot(tx-(W-55), ty-(H-140)) < 40) {
     G.touchBarrierId = touch.identifier;
     activateBarrier();
     return;
