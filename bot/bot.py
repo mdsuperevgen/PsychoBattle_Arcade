@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
 GITHUB_URL = "https://github.com/mdsuperevgen/PsychoBattle_Arcade"
-TMA_URL = "https://mdsuperevgen.github.io/PsychoBattle_Arcade/tma/"
+TMA_URL = "https://mdsuperevgen.github.io/PsychoBattle_Arcade/tma/?v=2"
 GAME_NAME = "🧠 Психо-Бой: Битва со Страхами"
 
 GAME_DESCRIPTION = """
