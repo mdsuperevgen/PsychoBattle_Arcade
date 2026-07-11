@@ -1,1 +1,2 @@
-python-telegram-bot>=21.0,<22.0  # Bothost: requires this for bot/bot.py
+# Bothost: requires this for bot/bot.py
+python-telegram-bot>=21.0,<22.0
