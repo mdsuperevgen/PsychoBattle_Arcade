@@ -1,0 +1,36 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Game generated files
+psycho_stats.json
+sounds/*.wav
+
+# Pygbag build
+build/
+dist/
+*.wasm
+
+# ProxyAI checkpoints (internal)
+.proxyai/
+
+# Environment
+.env
