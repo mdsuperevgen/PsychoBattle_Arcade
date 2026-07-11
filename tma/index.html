@@ -1452,17 +1452,6 @@ function drawTouchButtons() {
   ctx.font='26px sans-serif';
   ctx.fillStyle = `rgba(255,255,255,${alpha+0.3})`;
   ctx.fillText('💥', bx, by);
-
-  // Barrier button (right side, above bomb)
-  const rbx = W - 55, rby = H - 140, rbr = 40;
-  const barrierActive = G.powerupsActive.barrier;
-  ctx.fillStyle = `rgba(0,200,255,${alpha*0.8 + (barrierActive?0.3:0)})`;
-  ctx.beginPath(); ctx.arc(rbx, rby, rbr, 0, Math.PI*2); ctx.fill();
-  ctx.strokeStyle = `rgba(255,255,255,${alpha*0.5})`; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(rbx, rby, rbr, 0, Math.PI*2); ctx.stroke();
-  ctx.font='26px sans-serif';
-  ctx.fillStyle = `rgba(255,255,255,${alpha+0.3})`;
-  ctx.fillText('🛡', rbx, rby);
 }
 
 function drawMainMenu() {
@@ -1613,48 +1602,45 @@ canvas.addEventListener('mouseup', () => { G.pointerDown = false; });
 
 canvas.addEventListener('touchstart', e => {
   e.preventDefault();
-  const touch = e.touches[0];
-  const r = canvas.getBoundingClientRect();
-  const sx = W/r.width;
-  const tx = (touch.clientX - r.left)*sx;
-  const ty = (touch.clientY - r.top)*sx;
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    const touch = e.changedTouches[i];
+    const r = canvas.getBoundingClientRect();
+    const sx = W/r.width;
+    const tx = (touch.clientX - r.left)*sx;
+    const ty = (touch.clientY - r.top)*sx;
 
-  if (G.showMainMenu || G.showStats || G.gameOver) {
-    G.mouseX=tx; G.mouseY=ty;
-    canvas.dispatchEvent(new MouseEvent('mousedown', {clientX: touch.clientX, clientY: touch.clientY}));
-    return;
-  }
+    if (G.showMainMenu || G.showStats || G.gameOver) {
+      G.mouseX=tx; G.mouseY=ty;
+      canvas.dispatchEvent(new MouseEvent('mousedown', {clientX: touch.clientX, clientY: touch.clientY}));
+      return;
+    }
 
-  // Fire button (bottom-left circle at 65, H-55, r=50)
-  if (Math.hypot(tx-65, ty-(H-55)) < 50) {
-    G.touchFireId = touch.identifier;
-    shoot();
-    return;
+    // Fire button (bottom-left circle at 65, H-55, r=50)
+    if (Math.hypot(tx-65, ty-(H-55)) < 50) {
+      G.touchFireId = touch.identifier;
+      shoot();
+      continue;
+    }
+    // Bomb button (bottom-right circle at W-55, H-55, r=40)
+    if (Math.hypot(tx-(W-55), ty-(H-55)) < 40) {
+      G.touchBombId = touch.identifier;
+      activateBomb();
+      continue;
+    }
+    // Anywhere else = move
+    G.touchMoveId = touch.identifier;
+    G.player.x = clamp(tx, PLAYER_RADIUS, W-PLAYER_RADIUS);
   }
-  // Bomb button (bottom-right circle at W-55, H-55, r=40)
-  if (Math.hypot(tx-(W-55), ty-(H-55)) < 40) {
-    G.touchBombId = touch.identifier;
-    activateBomb();
-    return;
-  }
-  // Barrier button (right circle at W-55, H-140, r=40)
-  if (Math.hypot(tx-(W-55), ty-(H-140)) < 40) {
-    G.touchBarrierId = touch.identifier;
-    activateBarrier();
-    return;
-  }
-  // Move
-  G.touchMoveId = touch.identifier;
-  G.player.x = clamp(tx, PLAYER_RADIUS, W-PLAYER_RADIUS);
 }, {passive: false});
 
 canvas.addEventListener('touchmove', e => {
   e.preventDefault();
-  const touch = e.touches[0];
-  const r = canvas.getBoundingClientRect();
-  const sx = W/r.width;
-  const tx = (touch.clientX - r.left)*sx;
-  if (G.touchMoveId !== null) {
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    const touch = e.changedTouches[i];
+    if (touch.identifier !== G.touchMoveId) continue;
+    const r = canvas.getBoundingClientRect();
+    const sx = W/r.width;
+    const tx = (touch.clientX - r.left)*sx;
     G.player.x = clamp(tx, PLAYER_RADIUS, W-PLAYER_RADIUS);
   }
 }, {passive: false});
