@@ -8,6 +8,7 @@ PsychoBattle Arcade — Telegram Bot.
 """
 
 import os
+import asyncio
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
@@ -20,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
-GITHUB_URL = "https://github.com/your-username/PsychoBattle_Arcade"
+GITHUB_URL = "https://github.com/mdsuperevgen/PsychoBattle_Arcade"
 GAME_NAME = "🧠 Психо-Бой: Битва со Страхами"
 
 GAME_DESCRIPTION = """
@@ -116,7 +117,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         )
 
 
-def main() -> None:
+async def async_main() -> None:
+    """Async main: builds app, adds handlers, starts polling."""
     if not BOT_TOKEN:
         logger.critical("BOT_TOKEN не установлен! Задайте переменную окружения BOT_TOKEN.")
         return
@@ -129,7 +131,24 @@ def main() -> None:
     app.add_handler(CallbackQueryHandler(button_callback))
 
     logger.info("Бот запущен...")
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    # Use the async polling API directly instead of run_polling()
+    async with app:
+        await app.start()
+        await app.updater.start_polling(allowed_updates=Update.ALL_TYPES)
+        # Keep running until interrupted
+        stop_signal = asyncio.get_running_loop().create_future()
+        try:
+            await stop_signal
+        except asyncio.CancelledError:
+            pass
+        finally:
+            await app.updater.stop()
+            await app.stop()
+
+
+def main() -> None:
+    """Entry point — uses asyncio.run() for Python 3.12+ compatibility."""
+    asyncio.run(async_main())
 
 
 if __name__ == "__main__":
