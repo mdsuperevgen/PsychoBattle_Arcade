@@ -8,11 +8,30 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 html,body{width:100%;height:100%;overflow:hidden;background:#000;touch-action:none;-webkit-touch-callout:none}
-canvas{display:block;margin:0 auto;image-rendering:pixelated}
+#container{display:flex;flex-direction:column;width:100%;height:100%;}
+#canvas-wrap{flex:1;display:flex;justify-content:center;align-items:center;overflow:hidden;min-height:0;}
+canvas{display:block;max-width:100%;max-height:100%;image-rendering:pixelated;}
+#controls{height:80px;min-height:80px;display:flex;align-items:center;background:#111;border-top:1px solid #333;padding:0 10px;}
+.ctrl-btn{height:60px;border-radius:30px;border:2px solid #444;background:#222;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:none;-webkit-tap-highlight-color:transparent;}
+.ctrl-btn:active{transform:scale(0.92);}
+#btn-fire{width:70px;margin-right:auto;background:#2a1a0a;border-color:#ff6600;}
+#btn-bomb{width:56px;margin-left:5px;background:#1a0a0a;border-color:#ff4444;}
+.move-group{display:flex;gap:5px;margin-left:auto;}
+#btn-left,#btn-right{width:56px;gap:5px;background:#111;border-color:#666;}
 </style>
 </head>
 <body>
-<canvas id="game"></canvas>
+<div id="container">
+  <div id="canvas-wrap"><canvas id="game"></canvas></div>
+  <div id="controls">
+    <button class="ctrl-btn" id="btn-fire">🔥</button>
+    <button class="ctrl-btn" id="btn-bomb">💥</button>
+    <div class="move-group">
+      <button class="ctrl-btn" id="btn-left">◀</button>
+      <button class="ctrl-btn" id="btn-right">▶</button>
+    </div>
+  </div>
+</div>
 <script>
 // ============================================================
 // TELEGRAM MINI APP
@@ -265,6 +284,7 @@ function initGameState() {
     showStats: false,
 
     keys: { left: false, right: false, space: false, bomb: false, barrier: false },
+    fireHeld: false,
     pointerDown: false,
     pointerDownTime: 0,
     mouseX: W/2, mouseY: H/2,
@@ -1615,19 +1635,7 @@ canvas.addEventListener('touchstart', e => {
       return;
     }
 
-    // Fire button (bottom-left circle at 65, H-55, r=50)
-    if (Math.hypot(tx-65, ty-(H-55)) < 50) {
-      G.touchFireId = touch.identifier;
-      shoot();
-      continue;
-    }
-    // Bomb button (bottom-right circle at W-55, H-55, r=40)
-    if (Math.hypot(tx-(W-55), ty-(H-55)) < 40) {
-      G.touchBombId = touch.identifier;
-      activateBomb();
-      continue;
-    }
-    // Anywhere else = move
+    // Move
     G.touchMoveId = touch.identifier;
     G.player.x = clamp(tx, PLAYER_RADIUS, W-PLAYER_RADIUS);
   }
@@ -1648,12 +1656,46 @@ canvas.addEventListener('touchmove', e => {
 canvas.addEventListener('touchend', e => {
   for (let i=0; i<e.changedTouches.length; i++) {
     const id = e.changedTouches[i].identifier;
-    if (id === G.touchFireId) G.touchFireId = null;
-    if (id === G.touchBombId) G.touchBombId = null;
-    if (id === G.touchBarrierId) G.touchBarrierId = null;
     if (id === G.touchMoveId) G.touchMoveId = null;
   }
 });
+
+// HTML control buttons
+const btnFire = document.getElementById('btn-fire');
+const btnBomb = document.getElementById('btn-bomb');
+const btnLeft = document.getElementById('btn-left');
+const btnRight = document.getElementById('btn-right');
+
+function fireStart(e) { e.preventDefault(); G.touchFireId = 'html_fire'; shoot(); }
+function fireEnd(e) { e.preventDefault(); G.touchFireId = null; }
+btnFire.addEventListener('mousedown', fireStart);
+btnFire.addEventListener('mouseup', fireEnd);
+btnFire.addEventListener('mouseleave', fireEnd);
+btnFire.addEventListener('touchstart', fireStart, {passive: false});
+btnFire.addEventListener('touchend', fireEnd, {passive: false});
+btnFire.addEventListener('touchcancel', fireEnd, {passive: false});
+
+btnBomb.addEventListener('mousedown', e => { e.preventDefault(); activateBomb(); });
+btnBomb.addEventListener('touchstart', e => { e.preventDefault(); activateBomb(); }, {passive: false});
+
+function leftStart(e) { e.preventDefault(); G.keys.left = true; }
+function leftEnd(e) { e.preventDefault(); G.keys.left = false; }
+function rightStart(e) { e.preventDefault(); G.keys.right = true; }
+function rightEnd(e) { e.preventDefault(); G.keys.right = false; }
+
+btnLeft.addEventListener('mousedown', leftStart);
+btnLeft.addEventListener('mouseup', leftEnd);
+btnLeft.addEventListener('mouseleave', leftEnd);
+btnLeft.addEventListener('touchstart', leftStart, {passive: false});
+btnLeft.addEventListener('touchend', leftEnd, {passive: false});
+btnLeft.addEventListener('touchcancel', leftEnd, {passive: false});
+
+btnRight.addEventListener('mousedown', rightStart);
+btnRight.addEventListener('mouseup', rightEnd);
+btnRight.addEventListener('mouseleave', rightEnd);
+btnRight.addEventListener('touchstart', rightStart, {passive: false});
+btnRight.addEventListener('touchend', rightEnd, {passive: false});
+btnRight.addEventListener('touchcancel', rightEnd, {passive: false});
 
 // ============================================================
 // MENU ACTIONS
@@ -1685,16 +1727,18 @@ function goToMenu() {
 // RESIZE
 // ============================================================
 function resize() {
+  const wrap = document.getElementById('canvas-wrap');
+  const wrapH = wrap.clientHeight;
+  const wrapW = wrap.clientWidth;
   const ratio = W/H;
-  let cw = window.innerWidth;
-  let ch = window.innerHeight;
+  let cw = wrapW;
+  let ch = wrapH;
   if (cw/ch > ratio) { cw = ch*ratio; }
   else { ch = cw/ratio; }
   canvas.style.width = `${cw}px`;
   canvas.style.height = `${ch}px`;
   canvas.width = W;
   canvas.height = H;
-  // resize UI font rendering
   ctx.imageSmoothingEnabled = false;
 }
 window.addEventListener('resize', resize);
