@@ -10,7 +10,7 @@ PsychoBattle Arcade — Telegram Bot.
 import os
 import asyncio
 import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, KeyboardButton, ReplyKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 logging.basicConfig(
@@ -38,64 +38,27 @@ GAME_DESCRIPTION = """
 🔹 Адаптивное управление (клавиатура + тач)
 """.format(name=GAME_NAME)
 
-HOW_TO_PLAY = """
-🖥 *Как начать играть:*
-
-1. Скачай репозиторий с GitHub
-2. Установи Python 3.10+
-3. Установи зависимости: `pip install -r requirements.txt`
-4. Запусти: `python main.py`
-
-*Управление:*
-← → / A D — движение
-Пробел / ЛКМ — стрельба
-B — бомба
-E — барьер
-P — пауза
-ESC — меню
-"""
-
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Отправляет приветствие и клавиатуру с кнопкой игры."""
+    """Главное меню: Играть, Об игре."""
     keyboard = [
         [InlineKeyboardButton("🧠 ИГРАТЬ", web_app=WebAppInfo(url=TMA_URL))],
         [InlineKeyboardButton("ℹ️ Об игре", callback_data="about")],
-        [InlineKeyboardButton("📦 GitHub", url=GITHUB_URL)],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(
         f"👋 *Добро пожаловать в {GAME_NAME}!*\n\n"
         f"Твой мозг — главное оружие. Сражайся со страхами, "
-        f"побеждай боссов и становись сильнее!\n\n"
-        f"👇 Нажми *«🧠 ИГРАТЬ»*, чтобы начать!",
-        reply_markup=reply_markup,
-        parse_mode="Markdown",
-    )
-
-
-async def play(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Отправляет инструкцию по запуску."""
-    keyboard = [[InlineKeyboardButton("📦 Открыть на GitHub", url=GITHUB_URL)]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    await update.message.reply_text(
-        HOW_TO_PLAY,
+        f"побеждай боссов и становись сильнее!",
         reply_markup=reply_markup,
         parse_mode="Markdown",
     )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Отправляет список команд."""
-    await update.message.reply_text(
-        "📋 *Команды:*\n\n"
-        "/start — Приветствие\n"
-        "/play — Как начать играть\n"
-        "/help — Это сообщение",
-        parse_mode="Markdown",
-    )
+    """Перенаправляет на /start."""
+    await start(update, context)
 
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -104,16 +67,21 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await query.answer()
 
     if query.data == "about":
-        keyboard = [[InlineKeyboardButton("🎮 Как играть", callback_data="howto")]]
+        keyboard = [[InlineKeyboardButton("← Назад", callback_data="menu")]]
         await query.edit_message_text(
             GAME_DESCRIPTION,
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode="Markdown",
         )
-    elif query.data == "howto":
-        keyboard = [[InlineKeyboardButton("📦 Открыть на GitHub", url=GITHUB_URL)]]
+    elif query.data == "menu":
+        keyboard = [
+            [InlineKeyboardButton("🧠 ИГРАТЬ", web_app=WebAppInfo(url=TMA_URL))],
+            [InlineKeyboardButton("ℹ️ Об игре", callback_data="about")],
+        ]
         await query.edit_message_text(
-            HOW_TO_PLAY,
+            f"👋 *Добро пожаловать в {GAME_NAME}!*\n\n"
+            f"Твой мозг — главное оружие. Сражайся со страхами, "
+            f"побеждай боссов и становись сильнее!",
             reply_markup=InlineKeyboardMarkup(keyboard),
             parse_mode="Markdown",
         )
@@ -128,7 +96,6 @@ async def async_main() -> None:
     app = Application.builder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("play", play))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CallbackQueryHandler(button_callback))
 
