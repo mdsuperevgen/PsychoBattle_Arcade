@@ -10,7 +10,7 @@ PsychoBattle Arcade — Telegram Bot.
 import os
 import asyncio
 import logging
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
 logging.basicConfig(
@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 
 GITHUB_URL = "https://github.com/mdsuperevgen/PsychoBattle_Arcade"
+TMA_URL = "https://mdsuperevgen.github.io/PsychoBattle_Arcade/tma/"
 GAME_NAME = "🧠 Психо-Бой: Битва со Страхами"
 
 GAME_DESCRIPTION = """
@@ -56,10 +57,10 @@ ESC — меню
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Отправляет приветствие и клавиатуру."""
+    """Отправляет приветствие и клавиатуру с кнопкой игры."""
     keyboard = [
+        [InlineKeyboardButton("🧠 ИГРАТЬ", web_app=WebAppInfo(url=TMA_URL))],
         [InlineKeyboardButton("ℹ️ Об игре", callback_data="about")],
-        [InlineKeyboardButton("🎮 Как играть", callback_data="howto")],
         [InlineKeyboardButton("📦 GitHub", url=GITHUB_URL)],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -67,7 +68,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
         f"👋 *Добро пожаловать в {GAME_NAME}!*\n\n"
         f"Твой мозг — главное оружие. Сражайся со страхами, "
-        f"побеждай боссов и становись сильнее!",
+        f"побеждай боссов и становись сильнее!\n\n"
+        f"👇 Нажми *«🧠 ИГРАТЬ»*, чтобы начать!",
         reply_markup=reply_markup,
         parse_mode="Markdown",
     )
