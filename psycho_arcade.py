@@ -2493,7 +2493,7 @@ class PsychoBattle(arcade.Window):
             lines = []
             current_line = ''
             for word in words:
-                if len(current_line) + len(word) + 1 > 44:
+                if len(current_line) + len(word) + 1 > 55:
                     lines.append(current_line)
                     current_line = word
                 else:
@@ -2501,17 +2501,17 @@ class PsychoBattle(arcade.Window):
             if current_line:
                 lines.append(current_line)
 
-            y_offset = 415
+            y_offset = 420
             for line in lines:
                 arcade.draw_text(
                     line.strip(),
                     SCREEN_WIDTH / 2, y_offset,
                     (220, 220, 255, 200),
-                    font_size=12,
+                    font_size=14,
                     anchor_x='center',
                     anchor_y='center'
                 )
-                y_offset -= 22
+                y_offset -= 20
 
         # Имя босса
         if data.get('boss_name'):
