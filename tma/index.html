@@ -1743,41 +1743,42 @@ function drawLevelIntro() {
   const ac = G.currentLevel.accent;
 
   // Level number
-  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(`— УРОВЕНЬ ${data.level} —`, W/2, 580);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='15px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(`— УРОВЕНЬ ${data.level} —`, W/2, 585);
 
   // Name
-  ctx.fillStyle = `rgb(${ac[0]},${ac[1]},${ac[2]})`; ctx.font='44px sans-serif';
-  ctx.fillText(data.name, W/2, 520);
+  ctx.fillStyle = `rgb(${ac[0]},${ac[1]},${ac[2]})`; ctx.font='42px sans-serif';
+  ctx.fillText(data.name, W/2, 525);
 
   if (data.subtitle) {
-    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='15px sans-serif';
-    ctx.fillText(`✦ ${data.subtitle} ✦`, W/2, 475);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='14px sans-serif';
+    ctx.fillText(`✦ ${data.subtitle} ✦`, W/2, 480);
   }
 
   // Separator
   ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(60, 448); ctx.lineTo(W-60, 448); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(60, 452); ctx.lineTo(W-60, 452); ctx.stroke();
 
-  // Psychology
+  // Psychology description — wider wrap, larger font
   if (data.psychology) {
+    const maxChars = 48;
     const words = data.psychology.split(' ');
     const lines = [];
     let cur = '';
     words.forEach(w => {
-      if ((cur + ' ' + w).length > 44) { lines.push(cur); cur = w; }
+      if ((cur + ' ' + w).length > maxChars) { lines.push(cur); cur = w; }
       else cur = cur ? cur + ' ' + w : w;
     });
     if (cur) lines.push(cur);
-    let yo = 418;
-    ctx.fillStyle = 'rgba(220,220,255,0.8)'; ctx.font='12px sans-serif';
-    lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo -= 22; });
+    let yo = 425;
+    ctx.fillStyle = 'rgba(230,230,255,0.9)'; ctx.font='14px sans-serif';
+    lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo -= 20; });
   }
 
   // Boss name
   if (data.boss_name) {
-    ctx.fillStyle = 'rgba(255,100,100,0.8)'; ctx.font='16px sans-serif';
-    ctx.fillText(`👹 Босс уровня: ${data.boss_name}`, W/2, 140);
+    ctx.fillStyle = 'rgba(255,100,100,0.8)'; ctx.font='15px sans-serif';
+    ctx.fillText(`👹 Босс: ${data.boss_name}`, W/2, 150);
   }
 
   // Continue button
@@ -1789,7 +1790,7 @@ function drawLevelIntro() {
 
   // Hint
   ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.font='9px sans-serif';
-  ctx.fillText('Нажми ПРОБЕЛ или ENTER', W/2, 20);
+  ctx.fillText('Нажми ПРОБЕЛ или ENTER', W/2, 15);
 }
 
 function drawAffirmation() {
@@ -2100,7 +2101,7 @@ canvas.addEventListener('touchstart', e => {
     const tx = (touch.clientX - r.left)*sx;
     const ty = (touch.clientY - r.top)*sx;
 
-    if (G.showMainMenu || G.showStats || G.gameOver) {
+    if (G.showMainMenu || G.showStats || G.showLevelIntro || G.gameOver) {
       G.mouseX=tx; G.mouseY=ty;
       canvas.dispatchEvent(new MouseEvent('mousedown', {clientX: touch.clientX, clientY: touch.clientY}));
       return;

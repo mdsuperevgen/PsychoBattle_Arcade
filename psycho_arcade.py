@@ -2978,13 +2978,7 @@ class PsychoBattle(arcade.Window):
     def on_touch_press(self, x, y, touch_id, modifiers):
         self.touch_buttons_visible = True
 
-        if self.show_main_menu:
-            self.on_mouse_press(x, y, 1, modifiers)
-            return True
-        if self.show_stats:
-            self.on_mouse_press(x, y, 1, modifiers)
-            return True
-        if self.game_over:
+        if self.show_main_menu or self.show_stats or self.show_level_intro or self.game_over:
             self.on_mouse_press(x, y, 1, modifiers)
             return True
 
