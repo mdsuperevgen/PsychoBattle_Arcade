@@ -84,6 +84,7 @@ const LEVELS = [
     boss:{name:'Король Членистоногих',emoji:'🕷️',color:[74,0,51],size:64},
     affirmations:['Я в безопасности','Природа прекрасна','Я спокоен'],
     enemy_count:10,
+    psychology:'Зоофобия — страх перед животными. Один из древнейших страхов человечества, берущий начало в инстинкте самосохранения. В современном мире чаще проявляется как тревога при виде пауков, змей или диких животных.',
   },
   { id:'ocean', name:'Гидрофобии', subtitle:'Морские глубины',
     bg_color:[5,10,30], gradient:[[3,5,20],[5,10,30],[8,20,50],[10,30,70]], accent:[0,150,200], star_color:[100,200,255], bg_pattern:'ocean',
@@ -96,6 +97,7 @@ const LEVELS = [
     boss:{name:'Левиафан',emoji:'🐋',color:[10,60,120],size:70},
     affirmations:['Вода — это жизнь','Я спокоен в глубине','Океан убаюкивает'],
     enemy_count:12,
+    psychology:'Гидрофобия — страх воды. Может быть вызван травматическим опытом или чувством потери контроля в водной среде. Бессознательно напоминает о возвращении в первородный океан.',
   },
   { id:'medical', name:'Ятрофобии', subtitle:'Больницы и врачи',
     bg_color:[25,10,15], gradient:[[15,5,8],[25,10,15],[40,15,25],[55,20,35]], accent:[200,50,50], star_color:[255,150,150], bg_pattern:'medical',
@@ -108,6 +110,7 @@ const LEVELS = [
     boss:{name:'Доктор Страх',emoji:'🧑‍⚕️',color:[150,20,20],size:68},
     affirmations:['Я здоров','Больница — место помощи','Моё тело в порядке'],
     enemy_count:14,
+    psychology:'Ятрофобия — страх врачей и больниц. Часто берёт начало в детстве, когда медицинские процедуры ассоциируются с болью и беспомощностью. Усиливается чувством уязвимости перед неизвестным диагнозом.',
   },
   { id:'city', name:'Агорафобии', subtitle:'Городские джунгли',
     bg_color:[20,20,25], gradient:[[12,12,18],[20,20,25],[35,30,35],[50,40,45]], accent:[180,150,50], star_color:[255,220,150], bg_pattern:'city',
@@ -120,6 +123,7 @@ const LEVELS = [
     boss:{name:'Городской Гул',emoji:'🏙️',color:[80,60,30],size:72},
     affirmations:['Я часть города','Улицы безопасны','Я контролирую ситуацию'],
     enemy_count:16,
+    psychology:'Агорафобия — страх открытых пространств и людных мест. Возникает из-за чувства потери безопасного убежища. Город с его шумом, толпами и хаосом может стать триггером тревоги.',
   },
   { id:'abstract', name:'Тревожность', subtitle:'Тёмные мысли',
     bg_color:[10,5,15], gradient:[[5,2,10],[10,5,15],[20,10,30],[30,15,45]], accent:[150,50,200], star_color:[200,150,255], bg_pattern:'abstract',
@@ -132,6 +136,7 @@ const LEVELS = [
     boss:{name:'Голос Тревоги',emoji:'👁️',color:[100,0,120],size:66},
     affirmations:['Я спокоен','Мысли не опасны','Я сильнее страха'],
     enemy_count:18,
+    psychology:'Генерализованное тревожное расстройство — постоянное чувство беспокойства без явной причины. Разум сам создаёт пугающие сценарии, зацикливаясь на негативных мыслях.',
   },
   { id:'void', name:'Экзистенциальный', subtitle:'Пустота и одиночество',
     bg_color:[5,5,8], gradient:[[2,2,5],[5,5,8],[10,10,15],[15,15,22]], accent:[100,100,120], star_color:[200,200,210], bg_pattern:'void',
@@ -144,6 +149,7 @@ const LEVELS = [
     boss:{name:'Бездна',emoji:'🌌',color:[30,30,50],size:74},
     affirmations:['Я не один','Бытие прекрасно','Пустота — это тишина'],
     enemy_count:20,
+    psychology:'Экзистенциальный страх — ужас перед пустотой и бессмысленностью бытия. Человек боится одиночества, смерти и осознания конечности своего существования.',
   },
   { id:'tech', name:'Технофобии', subtitle:'Машины и ИИ',
     bg_color:[8,12,18], gradient:[[4,6,12],[8,12,18],[12,30,25],[16,50,30]], accent:[0,230,118], star_color:[0,255,150], bg_pattern:'tech',
@@ -156,6 +162,7 @@ const LEVELS = [
     boss:{name:'Главный Процессор',emoji:'🧠',color:[0,150,60],size:70},
     affirmations:['Технологии — это инструмент','Я управляю машинами','Прогресс — это хорошо'],
     enemy_count:22,
+    psychology:'Технофобия — страх перед технологиями и искусственным интеллектом. Усиливается по мере того, как машины становятся умнее людей. В основе — страх потери контроля и уникальности.',
   },
   { id:'cosmic', name:'Космофобии', subtitle:'Космос и неизвестность',
     bg_color:[5,5,20], gradient:[[3,2,15],[5,5,20],[10,8,40],[15,10,60]], accent:[80,50,200], star_color:[180,180,255], bg_pattern:'cosmic',
@@ -168,6 +175,7 @@ const LEVELS = [
     boss:{name:'Космический Ужас',emoji:'🛸',color:[40,20,100],size:72},
     affirmations:['Вселенная прекрасна','Я часть космоса','Неизвестность манит'],
     enemy_count:24,
+    psychology:'Космофобия — страх перед бескрайним космосом и неизведанным. Человек чувствует себя крошечным перед лицом бесконечности. Это страх перед тем, что мы не можем контролировать.',
   },
   { id:'myth', name:'Мифофобии', subtitle:'Древние страхи',
     bg_color:[15,8,12], gradient:[[8,4,6],[15,8,12],[28,14,20],[40,20,28]], accent:[200,100,20], star_color:[255,180,100], bg_pattern:'myth',
@@ -180,6 +188,7 @@ const LEVELS = [
     boss:{name:'Титан Страха',emoji:'🗿',color:[100,50,10],size:76},
     affirmations:['Мифы — это сказки','Я сильнее древних','Легенды оживают в играх'],
     enemy_count:26,
+    psychology:'Мифофобия — страх перед древними легендами и существами. Коллективное бессознательное человечества хранит образы чудовищ. Эти архетипы отражают наши глубинные страхи.',
   },
   { id:'xeno', name:'Ксенофобии', subtitle:'Чужое и неизвестное',
     bg_color:[10,5,18], gradient:[[5,2,12],[10,5,18],[20,10,35],[30,15,50]], accent:[255,50,80], star_color:[255,100,150], bg_pattern:'xeno',
@@ -192,6 +201,7 @@ const LEVELS = [
     boss:{name:'Финальный Страх',emoji:'💀',color:[180,0,50],size:80},
     affirmations:['Новое — это опыт','Я принимаю неизвестное','Страх — это вызов'],
     enemy_count:28,
+    psychology:'Ксенофобия — страх перед чужим и незнакомым. Один из самых сильных инстинктов. В современном мире трансформируется в страх перед переменами, мигрантами и неизвестным будущим.',
   },
 ];
 
@@ -204,9 +214,15 @@ const ACHIEVEMENTS = [
   {id:'level_3',name:'Путешественник',desc:'Достигни 3 уровня',icon:'🗺️',need:3},
   {id:'level_6',name:'Мастер',desc:'Достигни 6 уровня',icon:'👑',need:6},
   {id:'level_10',name:'Повелитель',desc:'Пройди все 10 уровней',icon:'👾',need:10},
+  {id:'boss_1',name:'Убийца боссов',desc:'Убей 1 босса',icon:'👹',need:1},
+  {id:'boss_all',name:'Завоеватель',desc:'Убей всех 10 боссов',icon:'💀',need:10},
   {id:'combo_10',name:'Комбо-мастер',desc:'Сделай комбо из 10',icon:'🔥',need:10},
   {id:'combo_20',name:'Легендарное комбо',desc:'Сделай комбо из 20',icon:'⚡',need:20},
+  {id:'shield_user',name:'Защитник',desc:'Используй щит',icon:'🛡️',need:1},
+  {id:'laser_user',name:'Лазерный луч',desc:'Используй лазер',icon:'🔴',need:1},
   {id:'no_damage',name:'Неуязвимый',desc:'Пройти уровень без потери HP',icon:'💎',need:1},
+  {id:'fast_boss',name:'Спринтер',desc:'Убить босса за 30 секунд',icon:'🏃',need:1},
+  {id:'collector',name:'Коллекционер',desc:'Собрать все типы бонусов',icon:'🧩',need:1},
 ];
 
 // ============================================================
@@ -282,6 +298,8 @@ function initGameState() {
     paused: false,
     showMainMenu: true,
     showStats: false,
+    showLevelIntro: false,
+    levelIntroData: null,
 
     keys: { left: false, right: false, space: false, bomb: false, barrier: false },
     fireHeld: false,
@@ -360,6 +378,7 @@ function loadStats() {
   return {
     totalKills: 0, totalBosses: 0, maxLevel: 1, maxLevelReached: 1,
     maxCombo: 0, highScore: 0, gamesPlayed: 0,
+    shield_used: 0, laser_used: 0,
     achievements: {},
   };
 }
@@ -481,6 +500,11 @@ function spawnEnemy() {
   const x = rand(40, W-40);
   const y = H + sz;
   const hp = Math.max(1, Math.floor((ed.hp + G.difficultyModifier/2) * diff.hp));
+  let specialType = null;
+  if (G.level >= 3 && Math.random() < 0.15 + G.level * 0.01) {
+    const types = ['bomber', 'diver', 'shield', 'teleport'];
+    specialType = types[randInt(0, Math.min(types.length, G.level - 1))];
+  }
   G.enemies.push({
     x, y,
     r: sz/2, speed: (G.enemySpeed + Math.random()*0.3) * diff.speed,
@@ -489,6 +513,7 @@ function spawnEnemy() {
     moveType: randInt(0,2), hitTimer: 0,
     trail: [], wobble: Math.random()*Math.PI*2,
     isBossProjectile: false,
+    special_type: specialType,
   });
 }
 
@@ -630,6 +655,8 @@ function applyPowerup(type) {
     helper: ['🤖 ПОМОЩНИКИ ПРИЗВАНЫ!','2 робота стреляют за тебя'],
   };
   const p = phrases[type] || ['❓ Бонус!',''];
+  if (type === 'shield') G.stats.shield_used = (G.stats.shield_used || 0) + 1;
+  if (type === 'laser') G.stats.laser_used = (G.stats.laser_used || 0) + 1;
   showAffirmation(p[0], p[1]);
   checkAchievements();
   playPowerup();
@@ -682,9 +709,15 @@ function checkAchievements() {
       case 'level_3': unlock = G.maxLevelReached >= 3; break;
       case 'level_6': unlock = G.maxLevelReached >= 6; break;
       case 'level_10': unlock = G.maxLevelReached >= 10; break;
+      case 'boss_1': unlock = G.bossesKilledTotal >= 1; break;
+      case 'boss_all': unlock = G.bossesKilledTotal >= 10; break;
       case 'combo_10': unlock = G.maxCombo >= 10; break;
       case 'combo_20': unlock = G.maxCombo >= 20; break;
-      case 'no_damage': break; // handled in boss_defeated
+      case 'shield_user': unlock = G.stats.shield_used >= 1; break;
+      case 'laser_user': unlock = G.stats.laser_used >= 1; break;
+      case 'no_damage': break; // handled in bossDefeated
+      case 'fast_boss': break; // handled in bossDefeated
+      case 'collector': unlock = G.collectedPowerups.size >= 7; break;
     }
     if (unlock) unlockAchievement(ach);
   });
@@ -774,6 +807,12 @@ function bossDefeated() {
     saveStats();
   }
 
+  if (G.totalFrame - G.bossSpawnTime < 1800) {
+    G.achievements.fast_boss = true;
+    showAffirmation('🏆 ДОСТИЖЕНИЕ: Спринтер', '🏃 Убить босса за 30 секунд');
+    saveStats();
+  }
+
   if (G.level < 10) {
     G.levelCompleteTimer = 180;
     showAffirmation(`🎉 УРОВЕНЬ ${G.level} ПРОЙДЕН!`, `${G.currentLevel.name} — побеждён!`);
@@ -809,7 +848,15 @@ function startNextLevel() {
   G.noDamageRun = true;
   G.levelCompleteTimer = 0;
   initStars();
-  showAffirmation(`⬆ УРОВЕНЬ ${G.level}!`, `${G.currentLevel.name}: ${G.currentLevel.subtitle}`);
+  // Show level intro
+  G.showLevelIntro = true;
+  G.levelIntroData = {
+    level: G.level,
+    name: G.currentLevel.name,
+    subtitle: G.currentLevel.subtitle || '',
+    psychology: G.currentLevel.psychology || '',
+    boss_name: G.currentLevel.boss.name,
+  };
   checkAchievements();
   saveStats();
 }
@@ -855,7 +902,7 @@ function shoot() {
 // UPDATE
 // ============================================================
 function update(dt) {
-  if (G.showMainMenu || G.showStats || G.gameOver || G.paused) return;
+  if (G.showMainMenu || G.showStats || G.showLevelIntro || G.gameOver || G.paused) return;
   G.totalFrame++;
 
   if (G.transitionTimer > 0) {
@@ -1130,6 +1177,7 @@ function draw() {
 
   if (G.showMainMenu) { drawMainMenu(); return; }
   if (G.showStats) { drawStats(); return; }
+  if (G.showLevelIntro) { drawLevelIntro(); return; }
   if (G.gameOver) { drawGameOver(); return; }
   if (G.paused) { drawPaused(); return; }
 
@@ -1425,6 +1473,8 @@ function drawBullets() {
 
 function drawEnemies() {
   G.enemies.forEach(e => {
+    const tf = G.totalFrame;
+
     if (e.trail.length>1) {
       e.trail.forEach((p,i) => {
         const alpha = (i/e.trail.length)*0.3;
@@ -1432,13 +1482,39 @@ function drawEnemies() {
         ctx.beginPath(); ctx.arc(p.x,p.y,e.r*0.3*(i/e.trail.length),0,Math.PI*2); ctx.fill();
       });
     }
-    // glow
-    ctx.fillStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},0.3)`;
-    ctx.beginPath(); ctx.arc(e.x,e.y,e.r*3.5,0,Math.PI*2); ctx.fill();
-    // emoji
-    ctx.font=`${e.r*2}px sans-serif`;
+
+    // Pulsing glow
+    const glowPulse = 1 + 0.08 * Math.sin(tf * 0.04 + e.wobble || 0);
+    const glowA = Math.floor((e.hitTimer === 0 ? 80 : 200) * glowPulse);
+    ctx.fillStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${Math.min(glowA,255)/255})`;
+    ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 3.5 * (1 + 0.05 * Math.sin(tf * 0.03 + (e.wobble||0))), 0, Math.PI*2); ctx.fill();
+
+    // Ring aura for special types
+    if (e.special_type) {
+      const ringA = Math.floor(60 + 40 * Math.sin(tf * 0.05 + (e.wobble||0)));
+      ctx.strokeStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${ringA/255})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 2.2 + 3 * Math.sin(tf * 0.04 + (e.wobble||0)), 0, Math.PI*2); ctx.stroke();
+    }
+
+    // Hit bounce
+    let hitScale = 1.0;
+    if (e.hitTimer > 0) hitScale = 1.0 + 0.15 * Math.sin(e.hitTimer * 0.8);
+
+    const sz = e.r * 2 * hitScale;
+    ctx.font=`${sz}px sans-serif`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillText(e.emoji, e.x, e.y);
+
+    // Shield double outline
+    if (e.special_type === 'shield') {
+      const sp = 1 + 0.05 * Math.sin(tf * 0.06);
+      ctx.strokeStyle = 'rgba(79,195,247,0.7)'; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 1.8 * sp, 0, Math.PI*2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(79,195,247,0.3)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 2.2 * sp, 0, Math.PI*2); ctx.stroke();
+    }
+
     // hp bar
     if (e.maxHp > 1 && !e.isBossProjectile) {
       const bw = e.r*2;
@@ -1589,6 +1665,50 @@ function drawProgress() {
   }
 }
 
+function drawLevelIntro() {
+  rectFilled(W/2, H/2, W, H, [0,0,0,0.9]);
+  if (!G.levelIntroData) return;
+  const data = G.levelIntroData;
+  const ac = G.currentLevel.accent;
+
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font='18px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(`🌌 УРОВЕНЬ ${data.level}`, W/2, H-100);
+
+  ctx.fillStyle = `rgb(${ac[0]},${ac[1]},${ac[2]})`; ctx.font='42px sans-serif';
+  ctx.fillText(data.name, W/2, H-150);
+
+  if (data.subtitle) {
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='14px sans-serif';
+    ctx.fillText(`✦ ${data.subtitle} ✦`, W/2, H-190);
+  }
+
+  if (data.psychology) {
+    const words = data.psychology.split(' ');
+    const lines = [];
+    let cur = '';
+    words.forEach(w => {
+      if ((cur + ' ' + w).length > 42) { lines.push(cur); cur = w; }
+      else cur = cur ? cur + ' ' + w : w;
+    });
+    if (cur) lines.push(cur);
+    let yo = H - 260;
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font='12px sans-serif';
+    lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo -= 22; });
+  }
+
+  if (data.boss_name) {
+    ctx.fillStyle = 'rgba(255,68,68,0.7)'; ctx.font='16px sans-serif';
+    ctx.fillText(`👹 Босс: ${data.boss_name}`, W/2, H-470);
+  }
+
+  // Continue button
+  const btnY = 60;
+  const hover = G.mouseX>W/2-120 && G.mouseX<W/2+120 && G.mouseY>btnY-25 && G.mouseY<btnY+25;
+  rectFilled(W/2, btnY, 240, 50, hover ? [ac[0],ac[1],ac[2]] : [255,255,255,0.15]);
+  ctx.fillStyle='#fff'; ctx.font='22px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('🚀 ВПЕРЁД!', W/2, btnY);
+}
+
 function drawAffirmation() {
   if (G.affirmationTimer>0) {
     const alpha = Math.min(1, G.affirmationTimer/20);
@@ -1649,27 +1769,6 @@ function drawUI() {
   }
 }
 
-function drawCombo() {
-  if (G.combo > 1) {
-    const alpha = Math.min(1, G.combo/15);
-    const sz = 18+Math.min(G.combo,25);
-    ctx.textAlign='center'; ctx.textBaseline='bottom';
-    // Glow
-    ctx.fillStyle = `rgba(255,215,0,${alpha*0.3})`;
-    ctx.font = `${sz}px sans-serif`;
-    ctx.fillText(`🔥 x${G.combo}`, W/2+1, 32);
-    ctx.fillStyle = `rgba(255,215,0,${alpha*0.8})`;
-    ctx.fillText(`🔥 x${G.combo}`, W/2, 31);
-    // Pulsing subtitle for high combo
-    if (G.combo >= 10) {
-      const pa = Math.floor(80 + 60*Math.sin(G.totalFrame*0.08));
-      ctx.fillStyle = `rgba(255,215,0,${pa/255})`;
-      ctx.font = '10px sans-serif';
-      ctx.fillText('⚡ НЕВЕРОЯТНО ⚡', W/2, 18);
-    }
-  }
-}
-
 function drawTouchButtons() {
   if (G.showMainMenu || G.showStats || G.gameOver) return;
   const alpha = 0.35;
@@ -1720,28 +1819,56 @@ function drawMainMenu() {
 
 function drawStats() {
   rectFilled(W/2, H/2, W, H, [0,0,0,0.9]);
-  ctx.fillStyle='rgb(108,92,231)'; ctx.font='30px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('📊 СТАТИСТИКА', W/2, H-60);
+  ctx.fillStyle='rgb(108,92,231)'; ctx.font='28px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('📊 СТАТИСТИКА', W/2, H-50);
 
   const s = G.stats;
   const lines = [
-    `🎯 Всего очков: ${s.highScore||0}`,
-    `💀 Всего убито: ${s.totalKills||0}`,
-    `👹 Боссов убито: ${s.totalBosses||0}`,
-    `🔥 Макс. комбо: ${s.maxCombo||0}`,
-    `🏆 Макс. уровень: ${s.maxLevelReached||1}`,
-    `🎮 Сыграно: ${s.gamesPlayed||0} игр`,
-    `🏅 Достижений: ${Object.values(G.achievements||{}).filter(v=>v).length}/${ACHIEVEMENTS.length}`,
+    `🎯 ${s.highScore||0} очков`,
+    `💀 ${s.totalKills||0} убито`,
+    `👹 ${s.totalBosses||0} боссов`,
+    `🔥 Комбо: ${s.maxCombo||0}`,
+    `🏆 Уровень: ${s.maxLevelReached||1}`,
+    `🎮 Игр: ${s.gamesPlayed||0}`,
   ];
-  let yOff = H-110;
-  ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='16px sans-serif';
-  lines.forEach(l => { ctx.fillText(l, W/2, yOff); yOff -= 30; });
+  let yo = H-100;
+  ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='12px sans-serif';
+  lines.forEach((l, i) => {
+    ctx.fillStyle = i < 2 ? 'rgb(108,92,231)' : 'rgba(255,255,255,0.8)';
+    ctx.fillText(l, 15, yo);
+    yo -= 22;
+  });
 
-  // back button
+  // Separator
+  const sepY = yo - 10;
+  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(20, sepY); ctx.lineTo(W-20, sepY); ctx.stroke();
+  ctx.fillStyle='rgba(255,215,0,0.7)'; ctx.font='14px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('🏅 ДОСТИЖЕНИЯ', W/2, sepY-22);
+
+  // Achievements list
+  let achY = sepY - 50;
+  ctx.textAlign='left';
+  ACHIEVEMENTS.forEach(ach => {
+    const unlocked = G.achievements[ach.id] || false;
+    if (unlocked) {
+      ctx.fillStyle = 'rgba(100,255,150,0.8)'; ctx.font='12px sans-serif';
+      ctx.fillText(ach.icon, 25, achY);
+      ctx.fillText(`${ach.name} — ${ach.desc}`, 50, achY);
+    } else {
+      ctx.fillStyle = 'rgba(100,100,100,0.6)'; ctx.font='11px sans-serif';
+      ctx.fillText('🔒', 25, achY);
+      ctx.fillText(ach.name, 50, achY);
+    }
+    achY -= 20;
+  });
+
+  // Back button
   const btnY=40;
   const hover = G.mouseX>W/2-100 && G.mouseX<W/2+100 && G.mouseY>btnY-20 && G.mouseY<btnY+20;
   rectFilled(W/2, btnY, 200, 40, hover?[108,92,231]:[255,255,255,0.2]);
-  ctx.fillStyle='#fff'; ctx.font='18px sans-serif'; ctx.fillText('← НАЗАД', W/2, btnY);
+  ctx.fillStyle='#fff'; ctx.font='18px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('← НАЗАД', W/2, btnY);
 }
 
 function drawGameOver() {
@@ -1787,6 +1914,14 @@ document.addEventListener('keydown', e => {
   if (G.showMainMenu) {
     if (e.key==='Enter'||e.key===' ') { e.preventDefault(); startGame(); return; }
   }
+  if (G.showLevelIntro) {
+    if (e.key==='Enter'||e.key===' ') {
+      e.preventDefault();
+      G.showLevelIntro = false;
+      showAffirmation(`🌌 УРОВЕНЬ ${G.level}: ${G.currentLevel.name}`, 'Ты справишься!');
+    }
+    return;
+  }
   if (G.gameOver) return;
   switch(e.key) {
     case 'ArrowLeft': case 'a': case 'A': G.keys.left=true; e.preventDefault(); break;
@@ -1821,6 +1956,13 @@ canvas.addEventListener('mousedown', e => {
     if (G.mouseX>W/2-120 && G.mouseX<W/2+120 && G.mouseY>H/2-40 && G.mouseY<H/2) { startGame(); }
     if (G.mouseX>W/2-120 && G.mouseX<W/2+120 && G.mouseY>H/2-90 && G.mouseY<H/2-50) {
       G.showMainMenu=false; G.showStats=true;
+    }
+    return;
+  }
+  if (G.showLevelIntro) {
+    if (G.mouseX>W/2-120 && G.mouseX<W/2+120 && G.mouseY>35 && G.mouseY<85) {
+      G.showLevelIntro = false;
+      showAffirmation(`🌌 УРОВЕНЬ ${G.level}: ${G.currentLevel.name}`, 'Ты справишься!');
     }
     return;
   }

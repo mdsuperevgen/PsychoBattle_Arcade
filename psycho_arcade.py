@@ -66,6 +66,7 @@ LEVELS = [
         'boss': {'name': 'Король Членистоногих', 'emoji': '🕷️', 'color': (74, 0, 51), 'size': 64},
         'affirmations': ['Я в безопасности', 'Природа прекрасна', 'Я спокоен'],
         'enemy_count': 10,
+        'psychology': 'Зоофобия — страх перед животными. Один из древнейших страхов человечества, берущий начало в инстинкте самосохранения. В современном мире чаще проявляется как тревога при виде пауков, змей или диких животных.',
     },
     {
         'id': 'ocean',
@@ -85,6 +86,7 @@ LEVELS = [
         'boss': {'name': 'Левиафан', 'emoji': '🐋', 'color': (10, 60, 120), 'size': 70},
         'affirmations': ['Вода — это жизнь', 'Я спокоен в глубине', 'Океан убаюкивает'],
         'enemy_count': 12,
+        'psychology': 'Гидрофобия — страх воды. Может быть вызван травматическим опытом или чувством потери контроля в водной среде. Бессознательно напоминает о возвращении в первородный океан.',
     },
     {
         'id': 'medical',
@@ -104,6 +106,7 @@ LEVELS = [
         'boss': {'name': 'Доктор Страх', 'emoji': '🧑‍⚕️', 'color': (150, 20, 20), 'size': 68},
         'affirmations': ['Я здоров', 'Больница — место помощи', 'Моё тело в порядке'],
         'enemy_count': 14,
+        'psychology': 'Ятрофобия — страх врачей и больниц. Часто берёт начало в детстве, когда медицинские процедуры ассоциируются с болью и беспомощностью. Усиливается чувством уязвимости перед неизвестным диагнозом.',
     },
     {
         'id': 'city',
@@ -123,6 +126,7 @@ LEVELS = [
         'boss': {'name': 'Городской Гул', 'emoji': '🏙️', 'color': (80, 60, 30), 'size': 72},
         'affirmations': ['Я часть города', 'Улицы безопасны', 'Я контролирую ситуацию'],
         'enemy_count': 16,
+        'psychology': 'Агорафобия — страх открытых пространств и людных мест. Возникает из-за чувства потери безопасного убежища. Город с его шумом, толпами и хаосом может стать триггером тревоги.',
     },
     {
         'id': 'abstract',
@@ -142,6 +146,7 @@ LEVELS = [
         'boss': {'name': 'Голос Тревоги', 'emoji': '👁️', 'color': (100, 0, 120), 'size': 66},
         'affirmations': ['Я спокоен', 'Мысли не опасны', 'Я сильнее страха'],
         'enemy_count': 18,
+        'psychology': 'Генерализованное тревожное расстройство — постоянное чувство беспокойства без явной причины. Разум сам создаёт пугающие сценарии, зацикливаясь на негативных мыслях.',
     },
     {
         'id': 'void',
@@ -161,6 +166,7 @@ LEVELS = [
         'boss': {'name': 'Бездна', 'emoji': '🌌', 'color': (30, 30, 50), 'size': 74},
         'affirmations': ['Я не один', 'Бытие прекрасно', 'Пустота — это тишина'],
         'enemy_count': 20,
+        'psychology': 'Экзистенциальный страх — ужас перед пустотой и бессмысленностью бытия. Человек боится одиночества, смерти и осознания конечности своего существования.',
     },
     {
         'id': 'tech',
@@ -180,6 +186,7 @@ LEVELS = [
         'boss': {'name': 'Главный Процессор', 'emoji': '🧠', 'color': (0, 150, 60), 'size': 70},
         'affirmations': ['Технологии — это инструмент', 'Я управляю машинами', 'Прогресс — это хорошо'],
         'enemy_count': 22,
+        'psychology': 'Технофобия — страх перед технологиями и искусственным интеллектом. Усиливается по мере того, как машины становятся умнее людей. В основе — страх потери контроля и уникальности.',
     },
     {
         'id': 'cosmic',
@@ -199,6 +206,7 @@ LEVELS = [
         'boss': {'name': 'Космический Ужас', 'emoji': '🛸', 'color': (40, 20, 100), 'size': 72},
         'affirmations': ['Вселенная прекрасна', 'Я часть космоса', 'Неизвестность манит'],
         'enemy_count': 24,
+        'psychology': 'Космофобия — страх перед бескрайним космосом и неизведанным. Человек чувствует себя крошечным перед лицом бесконечности. Это страх перед тем, что мы не можем контролировать.',
     },
     {
         'id': 'myth',
@@ -218,6 +226,7 @@ LEVELS = [
         'boss': {'name': 'Титан Страха', 'emoji': '🗿', 'color': (100, 50, 10), 'size': 76},
         'affirmations': ['Мифы — это сказки', 'Я сильнее древних', 'Легенды оживают в играх'],
         'enemy_count': 26,
+        'psychology': 'Мифофобия — страх перед древними легендами и существами. Коллективное бессознательное человечества хранит образы чудовищ. Эти архетипы отражают наши глубинные страхи.',
     },
     {
         'id': 'xeno',
@@ -237,6 +246,7 @@ LEVELS = [
         'boss': {'name': 'Финальный Страх', 'emoji': '💀', 'color': (180, 0, 50), 'size': 80},
         'affirmations': ['Новое — это опыт', 'Я принимаю неизвестное', 'Страх — это вызов'],
         'enemy_count': 28,
+        'psychology': 'Ксенофобия — страх перед чужим и незнакомым. Один из самых сильных инстинктов. В современном мире трансформируется в страх перед переменами, мигрантами и неизвестным будущим.',
     },
 ]
 
@@ -791,6 +801,8 @@ class PsychoBattle(arcade.Window):
         self.show_main_menu = True
         self.show_stats = False
         self.show_controls = False
+        self.show_level_intro = False
+        self.level_intro_data = None
         self.paused = False
 
         self.player = Player()
@@ -958,7 +970,7 @@ class PsychoBattle(arcade.Window):
         self.total_frame += 1
         self.play_time += delta_time
 
-        if self.show_main_menu or self.show_stats or self.game_over or self.paused:
+        if self.show_main_menu or self.show_stats or self.game_over or self.paused or self.show_level_intro:
             return
 
         if self.show_controls:
@@ -1517,14 +1529,20 @@ class PsychoBattle(arcade.Window):
         self.lives = min(3, self.lives + 1)
         self.no_damage_run = True
         self.level_complete_timer = 0
+        self.transition_timer = 0
         self.init_stars()
-        self.show_affirmation(
-            f"⬆ УРОВЕНЬ {self.level}!",
-            f"{self.current_level_data['name']}: {self.current_level_data['subtitle']}"
-        )
+        self._stop_music()
+        # Показать экран вступления
+        self.show_level_intro = True
+        self.level_intro_data = {
+            'level': self.level,
+            'name': self.current_level_data['name'],
+            'subtitle': self.current_level_data.get('subtitle', ''),
+            'psychology': self.current_level_data.get('psychology', ''),
+            'boss_name': self.current_level_data['boss']['name'],
+        }
         self.check_achievements()
         self.save_stats()
-        self._start_music(self.level)
 
     def lose_life(self):
         self.reset_powerups()
@@ -1683,6 +1701,10 @@ class PsychoBattle(arcade.Window):
 
         if self.show_stats:
             self.draw_stats()
+            return
+
+        if self.show_level_intro:
+            self.draw_level_intro()
             return
 
         if self.game_over:
@@ -1964,29 +1986,51 @@ class PsychoBattle(arcade.Window):
 
     def draw_enemies(self):
         for enemy in self.enemies:
+            ex, ey = enemy.x, enemy.y
+            tf = self.total_frame
+
+            # Трейл
             if len(enemy.trail) > 1:
                 for i, pos in enumerate(enemy.trail[:-1]):
-                    alpha = (i / len(enemy.trail)) * 0.3
+                    t = i / len(enemy.trail)
+                    alpha = t * 0.3
                     arcade.draw_circle_filled(
                         pos[0], pos[1],
-                        enemy.radius * 0.2 * (i / len(enemy.trail)),
+                        enemy.radius * 0.2 * t,
                         (enemy.color[0], enemy.color[1], enemy.color[2], int(alpha * 255))
                     )
 
             if enemy.special_type == 'diver' and not enemy.special_visible:
                 continue
 
-            glow_alpha = 80 if enemy.hit_timer == 0 else 200
+            # Пульсирующее свечение
+            glow_pulse = 1 + 0.08 * math.sin(tf * 0.04 + enemy.wobble)
+            glow_alpha = int((80 if enemy.hit_timer == 0 else 200) * glow_pulse)
             arcade.draw_circle_filled(
-                enemy.x, enemy.y,
-                enemy.radius * 3.5,
-                (enemy.color[0], enemy.color[1], enemy.color[2], glow_alpha)
+                ex, ey,
+                enemy.radius * 3.5 * (1 + 0.05 * math.sin(tf * 0.03 + enemy.wobble)),
+                (enemy.color[0], enemy.color[1], enemy.color[2], min(glow_alpha, 255))
             )
 
-            size = enemy.radius * 1.8
+            # Аура-кольцо для типов врагов
+            if enemy.special_type:
+                ring_alpha = int(60 + 40 * math.sin(tf * 0.05 + enemy.wobble))
+                arcade.draw_circle_outline(
+                    ex, ey,
+                    enemy.radius * 2.2 + 3 * math.sin(tf * 0.04 + enemy.wobble),
+                    (enemy.color[0], enemy.color[1], enemy.color[2], ring_alpha),
+                    2
+                )
+
+            # Эффект получения урона — scale bounce
+            hit_scale = 1.0
+            if enemy.hit_timer > 0:
+                hit_scale = 1.0 + 0.15 * math.sin(enemy.hit_timer * 0.8)
+
+            size = enemy.radius * 1.8 * hit_scale
             arcade.draw_text(
                 enemy.emoji,
-                enemy.x, enemy.y,
+                ex, ey,
                 (255, 255, 255),
                 font_size=size,
                 anchor_x='center',
@@ -1995,20 +2039,26 @@ class PsychoBattle(arcade.Window):
 
             if enemy.max_hp > 1 and not enemy.is_boss_projectile:
                 bar_width = enemy.radius * 2
-                bar_y = enemy.y - enemy.radius - 14
-                draw_rect_filled(enemy.x, bar_y, bar_width, 5, (0, 0, 0, 180))
+                bar_y = ey - enemy.radius - 14
+                draw_rect_filled(ex, bar_y, bar_width, 5, (0, 0, 0, 180))
                 hp_ratio = enemy.hp / enemy.max_hp if enemy.max_hp > 0 else 0
                 hp_color = (79, 195, 247) if hp_ratio > 0.3 else (255, 23, 68)
-                draw_rect_filled(enemy.x - bar_width / 2 + bar_width * hp_ratio / 2, bar_y, bar_width * hp_ratio, 5,
+                draw_rect_filled(ex - bar_width / 2 + bar_width * hp_ratio / 2, bar_y, bar_width * hp_ratio, 5,
                                  hp_color)
 
             if enemy.special_type == 'shield':
-                shield_pulse = 1 + 0.03 * math.sin(self.total_frame * 0.05)
+                shield_pulse = 1 + 0.05 * math.sin(tf * 0.06)
                 arcade.draw_circle_outline(
-                    enemy.x, enemy.y,
-                    enemy.radius * 1.6 * shield_pulse,
-                    (79, 195, 247, 150),
+                    ex, ey,
+                    enemy.radius * 1.8 * shield_pulse,
+                    (79, 195, 247, 180),
                     3
+                )
+                arcade.draw_circle_outline(
+                    ex, ey,
+                    enemy.radius * 2.2 * shield_pulse,
+                    (79, 195, 247, 80),
+                    1
                 )
 
     def draw_boss(self):
@@ -2320,6 +2370,102 @@ class PsychoBattle(arcade.Window):
                 anchor_y='center'
             )
 
+    def draw_level_intro(self):
+        """Экран вступления уровня с психологическим описанием."""
+        draw_rect_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, (0, 0, 0, 230))
+
+        if not self.level_intro_data:
+            return
+
+        data = self.level_intro_data
+
+        # Название уровня
+        arcade.draw_text(
+            f"🌌 УРОВЕНЬ {data['level']}",
+            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100,
+            (255, 255, 255, 150),
+            font_size=18,
+            anchor_x='center',
+            anchor_y='center'
+        )
+
+        # Название фобии
+        theme = self.current_level_data
+        accent = theme.get('accent', (108, 92, 231))
+        arcade.draw_text(
+            data['name'],
+            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150,
+            (accent[0], accent[1], accent[2]),
+            font_size=42,
+            anchor_x='center',
+            anchor_y='center'
+        )
+
+        # Подзаголовок
+        if data.get('subtitle'):
+            arcade.draw_text(
+                f"✦ {data['subtitle']} ✦",
+                SCREEN_WIDTH / 2, SCREEN_HEIGHT - 190,
+                (255, 255, 255, 120),
+                font_size=14,
+                anchor_x='center',
+                anchor_y='center'
+            )
+
+        # Психологическое описание
+        psych = data.get('psychology', '')
+        if psych:
+            # Разбиваем на строки по ~42 символа
+            words = psych.split()
+            lines = []
+            current_line = ''
+            for word in words:
+                if len(current_line) + len(word) + 1 > 42:
+                    lines.append(current_line)
+                    current_line = word
+                else:
+                    current_line = f"{current_line} {word}" if current_line else word
+            if current_line:
+                lines.append(current_line)
+
+            y_offset = SCREEN_HEIGHT - 260
+            for line in lines:
+                arcade.draw_text(
+                    line.strip(),
+                    SCREEN_WIDTH / 2, y_offset,
+                    (255, 255, 255, 200),
+                    font_size=12,
+                    anchor_x='center',
+                    anchor_y='center'
+                )
+                y_offset -= 22
+
+        # Имя босса
+        if data.get('boss_name'):
+            arcade.draw_text(
+                f"👹 Босс: {data['boss_name']}",
+                SCREEN_WIDTH / 2, SCREEN_HEIGHT - 470,
+                (255, 68, 68, 180),
+                font_size=16,
+                anchor_x='center',
+                anchor_y='center'
+            )
+
+        # Кнопка "Вперёд!"
+        btn_y = 60
+        is_hover = (SCREEN_WIDTH / 2 - 120 < self.mouse_x < SCREEN_WIDTH / 2 + 120 and
+                    btn_y - 25 < self.mouse_y < btn_y + 25)
+        btn_color = (accent[0], accent[1], accent[2]) if is_hover else (255, 255, 255, 40)
+        draw_rect_filled(SCREEN_WIDTH / 2, btn_y, 240, 50, btn_color)
+        arcade.draw_text(
+            "🚀 ВПЕРЁД!",
+            SCREEN_WIDTH / 2, btn_y,
+            (255, 255, 255),
+            font_size=22,
+            anchor_x='center',
+            anchor_y='center'
+        )
+
     def draw_level_complete(self):
         if self.level_complete_timer > 0:
             alpha = min(1, self.level_complete_timer / 30)
@@ -2408,9 +2554,9 @@ class PsychoBattle(arcade.Window):
 
         arcade.draw_text(
             "📊 СТАТИСТИКА",
-            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 60,
+            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 50,
             (108, 92, 231),
-            font_size=30,
+            font_size=28,
             anchor_x='center',
             anchor_y='center'
         )
@@ -2418,36 +2564,76 @@ class PsychoBattle(arcade.Window):
         stats = self.load_stats()
 
         lines = [
-            f"🎯 Всего очков: {stats.get('high_score', 0)}",
-            f"💀 Всего убито: {stats.get('total_kills', 0)}",
-            f"👹 Боссов убито: {stats.get('total_bosses', 0)}",
-            f"🔥 Макс. комбо: {stats.get('max_combo', 0)}",
-            f"🏆 Макс. уровень: {stats.get('max_level_reached', 1)}",
-            f"🛡️ Щитов использовано: {stats.get('shield_used', 0)}",
-            f"🔴 Лазеров использовано: {stats.get('laser_used', 0)}",
-            f"⏱ Сыграно: {stats.get('games_played', 0)} игр",
+            f"🎯 {stats.get('high_score', 0)} очков",
+            f"💀 {stats.get('total_kills', 0)} убито",
+            f"👹 {stats.get('total_bosses', 0)} боссов",
+            f"🔥 Комбо: {stats.get('max_combo', 0)}",
+            f"🏆 Уровень: {stats.get('max_level_reached', 1)}",
+            f"🛡️ Щиты: {stats.get('shield_used', 0)}",
+            f"🔴 Лазеры: {stats.get('laser_used', 0)}",
+            f"⏱ Игр: {stats.get('games_played', 0)}",
         ]
 
         last_played = stats.get('last_played', '')
         if last_played:
-            lines.append(f"📅 Последняя игра: {last_played}")
+            lines.append(f"📅 {last_played}")
 
-        # Достижения
-        achievements = stats.get('achievements', {})
-        unlocked = sum(1 for v in achievements.values() if v)
-        lines.append(f"🏅 Достижений: {unlocked}/{len(ACHIEVEMENTS)}")
-
-        y_offset = SCREEN_HEIGHT - 110
-        for line in lines:
+        stats_y = SCREEN_HEIGHT - 100
+        for i, line in enumerate(lines):
+            col = (108, 92, 231) if i < 2 else (255, 255, 255, 200)
             arcade.draw_text(
                 line,
-                SCREEN_WIDTH / 2, y_offset,
-                (255, 255, 255, 200),
-                font_size=16,
-                anchor_x='center',
+                15, stats_y - i * 22,
+                col,
+                font_size=12,
+                anchor_x='left',
                 anchor_y='center'
             )
-            y_offset -= 30
+
+        stats_end_y = SCREEN_HEIGHT - 100 - len(lines) * 22
+        # Разделитель
+        sep_y = stats_end_y - 15
+        arcade.draw_line(20, sep_y, SCREEN_WIDTH - 20, sep_y, (255, 255, 255, 30), 1)
+        arcade.draw_text(
+            "🏅 ДОСТИЖЕНИЯ",
+            SCREEN_WIDTH / 2, sep_y - 22,
+            (255, 215, 0, 180),
+            font_size=14,
+            anchor_x='center',
+            anchor_y='center'
+        )
+
+        # Список достижений
+        saved_achievements = stats.get('achievements', {})
+        ach_y = sep_y - 50
+        for ach in ACHIEVEMENTS:
+            unlocked = saved_achievements.get(ach['id'], False)
+            if unlocked:
+                icon = f"{ach['icon']}"
+                text = f"{ach['name']} — {ach['desc']}"
+                color = (100, 255, 150, 200)
+            else:
+                icon = "🔒"
+                text = f"{ach['name']}"
+                color = (100, 100, 100, 150)
+
+            arcade.draw_text(
+                icon,
+                25, ach_y,
+                color,
+                font_size=12,
+                anchor_x='left',
+                anchor_y='center'
+            )
+            arcade.draw_text(
+                text,
+                50, ach_y,
+                color,
+                font_size=11,
+                anchor_x='left',
+                anchor_y='center'
+            )
+            ach_y -= 20
 
         # Кнопка "Назад"
         btn_y = 40
@@ -2539,6 +2725,16 @@ class PsychoBattle(arcade.Window):
             elif key == arcade.key.ESCAPE:
                 return
 
+        if self.show_level_intro:
+            if key == arcade.key.SPACE or key == arcade.key.ENTER:
+                self.show_level_intro = False
+                self._start_music(self.level)
+                self.show_affirmation(
+                    f"🌌 УРОВЕНЬ {self.level}: {self.current_level_data['name']}",
+                    "Ты справишься!"
+                )
+            return
+
         if self.game_over:
             return
 
@@ -2586,6 +2782,17 @@ class PsychoBattle(arcade.Window):
                   SCREEN_HEIGHT / 2 - 90 < y < SCREEN_HEIGHT / 2 - 50):
                 self.show_main_menu = False
                 self.show_stats = True
+            return
+
+        if self.show_level_intro:
+            if (SCREEN_WIDTH / 2 - 120 < x < SCREEN_WIDTH / 2 + 120 and
+                    35 < y < 85):
+                self.show_level_intro = False
+                self._start_music(self.level)
+                self.show_affirmation(
+                    f"🌌 УРОВЕНЬ {self.level}: {self.current_level_data['name']}",
+                    "Ты справишься!"
+                )
             return
 
         if self.show_stats:
@@ -2673,6 +2880,8 @@ class PsychoBattle(arcade.Window):
         return self._in_rect(x, y, bx, by, bw, bh)
 
     def on_touch_press(self, x, y, touch_id, modifiers):
+        self.touch_buttons_visible = True
+
         if self.show_main_menu:
             self.on_mouse_press(x, y, 1, modifiers)
             return True
