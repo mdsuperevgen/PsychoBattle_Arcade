@@ -1539,10 +1539,10 @@ function drawEnemies() {
       ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 2.2 + 3 * Math.sin(tf * 0.04 + (e.wobble||0)), 0, Math.PI*2); ctx.stroke();
       // Type label
-      ctx.fillStyle = `rgba(255,255,255,${ringA/510})`;
-      ctx.font = '7px sans-serif';
+      ctx.fillStyle = `rgba(255,255,255,${Math.min(ringA/255+0.3, 1)})`;
+      ctx.font = '8px sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(e.special_type.toUpperCase(), e.x, e.y + e.r + 8);
+      ctx.fillText(e.special_type.toUpperCase(), Math.round(e.x), Math.round(e.y + e.r + 8));
     }
 
     // Hit flash
@@ -1560,10 +1560,10 @@ function drawEnemies() {
     let hitScale = 1.0;
     if (e.hitTimer > 0) hitScale = 1.0 + 0.15 * Math.sin(e.hitTimer * 0.8);
 
-    const sz = e.r * 2 * hitScale;
+    const sz = Math.round(e.r * 2 * hitScale);
     ctx.font=`${sz}px sans-serif`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillText(e.emoji, e.x, e.y);
+    ctx.fillText(e.emoji, Math.round(e.x), Math.round(e.y));
 
     // Shield double outline
     if (e.special_type === 'shield') {
@@ -1617,26 +1617,26 @@ function drawBoss() {
   ctx.fillStyle = 'rgba(0,0,0,0.2)';
   ctx.beginPath(); ctx.ellipse(b.x, b.y - b.r*1.5*sc, b.r*1.25*sc, 3, 0, 0, Math.PI*2); ctx.fill();
 
-  // Boss emoji with pulse
-  ctx.font = `${b.r*3.2*sc}px sans-serif`;
+  // Boss emoji with pulse — crisp rendering
+  ctx.font = `${Math.round(b.r*3.2*sc)}px sans-serif`;
   ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(b.emoji, b.x, b.y);
+  ctx.fillText(b.emoji, Math.round(b.x), Math.round(b.y));
 
   // name
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.font = '14px sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.font = '15px sans-serif';
   ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(b.name, b.x, b.y-b.r*sc*1.8);
+  ctx.fillText(b.name, Math.round(b.x), Math.round(b.y-b.r*sc*1.8));
 
   // hp bar
   const bw = b.r*3.5*sc;
-  const by = b.y - b.r*sc - 32;
+  const by = Math.round(b.y - b.r*sc - 32);
   rectFilled(b.x, by, bw+4, 14, [0,0,0,0.8]);
   const ratio = Math.max(0, b.hp/b.maxHp);
   const hpc = ratio>0.3 ? [79,195,247] : [255,23,68];
   rectFilled(b.x-bw/2+bw*ratio/2, by, bw*ratio, 10, hpc);
-  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font='9px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(`HP ${Math.floor(b.hp)} / ${b.maxHp}`, b.x, by);
+  ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font='10px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(`HP ${Math.floor(b.hp)} / ${b.maxHp}`, Math.round(b.x), by);
 }
 
 function drawPowerups() {
@@ -1743,7 +1743,7 @@ function drawLevelIntro() {
   const ac = G.currentLevel.accent;
 
   // Level number
-  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='15px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font='18px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
   ctx.fillText(`— УРОВЕНЬ ${data.level} —`, W/2, 585);
 
   // Name
@@ -1751,12 +1751,12 @@ function drawLevelIntro() {
   ctx.fillText(data.name, W/2, 525);
 
   if (data.subtitle) {
-    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='14px sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font='17px sans-serif';
     ctx.fillText(`✦ ${data.subtitle} ✦`, W/2, 480);
   }
 
   // Separator
-  ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(60, 452); ctx.lineTo(W-60, 452); ctx.stroke();
 
   // Psychology description — wider wrap, larger font
@@ -1771,13 +1771,13 @@ function drawLevelIntro() {
     });
     if (cur) lines.push(cur);
     let yo = 425 - (lines.length - 1) * 20;
-    ctx.fillStyle = 'rgba(230,230,255,0.9)'; ctx.font='14px sans-serif';
+    ctx.fillStyle = 'rgba(240,240,255,1)'; ctx.font='15px sans-serif';
     lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo += 20; });
   }
 
   // Boss name
   if (data.boss_name) {
-    ctx.fillStyle = 'rgba(255,100,100,0.8)'; ctx.font='15px sans-serif';
+    ctx.fillStyle = 'rgba(255,100,100,0.95)'; ctx.font='18px sans-serif';
     ctx.fillText(`👹 Босс: ${data.boss_name}`, W/2, 150);
   }
 

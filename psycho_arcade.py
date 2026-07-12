@@ -2069,9 +2069,9 @@ class PsychoBattle(arcade.Window):
                 # Тип врага текстом
                 type_label = enemy.special_type.upper()
                 arcade.draw_text(
-                    type_label, ex, ey + enemy.radius + 8,
-                    (255, 255, 255, ring_alpha // 2),
-                    font_size=7, anchor_x='center', anchor_y='center'
+                    type_label, int(ex), int(ey + enemy.radius + 8),
+                    (255, 255, 255, ring_alpha),
+                    font_size=8, anchor_x='center', anchor_y='center'
                 )
 
             # Эффект получения урона — scale bounce + вспышка
@@ -2086,10 +2086,10 @@ class PsychoBattle(arcade.Window):
             arcade.draw_ellipse_filled(ex, ey - enemy.radius * 0.8, enemy.radius * 1.5, 4, (0, 0, 0, 30))
 
             # Сам враг
-            size = enemy.radius * 1.8 * hit_scale
+            size = int(enemy.radius * 1.8 * hit_scale)
             arcade.draw_text(
                 enemy.emoji,
-                ex, ey,
+                int(ex), int(ey),
                 (255, 255, 255),
                 font_size=size,
                 anchor_x='center',
@@ -2162,11 +2162,11 @@ class PsychoBattle(arcade.Window):
             (0, 0, 0, 50)
         )
 
-        # Эмодзи босса с пульсацией
-        size = b.radius * 2.6 * b.scale
+        # Эмодзи босса с пульсацией — чёткий рендер
+        size = int(b.radius * 2.6 * b.scale)
         arcade.draw_text(
             b.emoji,
-            b.x, b.y,
+            int(b.x), int(b.y),
             (255, 255, 255),
             font_size=size,
             anchor_x='center',
@@ -2175,9 +2175,9 @@ class PsychoBattle(arcade.Window):
 
         arcade.draw_text(
             b.name,
-            b.x, b.y - b.radius * 1.8 * b.scale,
-            (255, 255, 255, 180),
-            font_size=14,
+            int(b.x), int(b.y - b.radius * 1.8 * b.scale),
+            (255, 255, 255, 200),
+            font_size=15,
             anchor_x='center',
             anchor_y='center'
         )
@@ -2192,9 +2192,9 @@ class PsychoBattle(arcade.Window):
 
         arcade.draw_text(
             f"HP {b.hp:.0f} / {b.max_hp}",
-            b.x, bar_y,
-            (255, 255, 255, 150),
-            font_size=9,
+            b.x, int(bar_y),
+            (255, 255, 255, 200),
+            font_size=10,
             anchor_x='center',
             anchor_y='center'
         )
@@ -2458,8 +2458,8 @@ class PsychoBattle(arcade.Window):
         arcade.draw_text(
             f"— УРОВЕНЬ {data['level']} —",
             SCREEN_WIDTH / 2, 580,
-            (255, 255, 255, 120),
-            font_size=16,
+            (255, 255, 255, 200),
+            font_size=18,
             anchor_x='center',
             anchor_y='center'
         )
@@ -2477,14 +2477,14 @@ class PsychoBattle(arcade.Window):
             arcade.draw_text(
                 f"✦ {data['subtitle']} ✦",
                 SCREEN_WIDTH / 2, 475,
-                (255, 255, 255, 130),
-                font_size=15,
+                (255, 255, 255, 200),
+                font_size=17,
                 anchor_x='center',
                 anchor_y='center'
             )
 
         # Разделитель
-        arcade.draw_line(60, 445, SCREEN_WIDTH - 60, 445, (255, 255, 255, 25), 1)
+        arcade.draw_line(60, 445, SCREEN_WIDTH - 60, 445, (255, 255, 255, 50), 1)
 
         # Психологическое описание
         psych = data.get('psychology', '')
@@ -2506,8 +2506,8 @@ class PsychoBattle(arcade.Window):
                 arcade.draw_text(
                     line.strip(),
                     SCREEN_WIDTH / 2, y_offset,
-                    (220, 220, 255, 200),
-                    font_size=14,
+                    (230, 230, 255, 240),
+                    font_size=15,
                     anchor_x='center',
                     anchor_y='center'
                 )
@@ -2518,8 +2518,8 @@ class PsychoBattle(arcade.Window):
             arcade.draw_text(
                 f"👹 Босс уровня: {data['boss_name']}",
                 SCREEN_WIDTH / 2, 140,
-                (255, 100, 100, 200),
-                font_size=16,
+                (255, 100, 100, 240),
+                font_size=18,
                 anchor_x='center',
                 anchor_y='center'
             )
