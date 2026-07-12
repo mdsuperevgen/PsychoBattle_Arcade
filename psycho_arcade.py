@@ -24,7 +24,7 @@ LASER_SPEED = 14
 ENEMY_BASE_SPEED = 1.0
 ENEMIES_PER_LEVEL = 12
 BOSS_BASE_HP = 20
-MAX_PARTICLES = 150
+MAX_PARTICLES = 200
 
 UI_HEIGHT = 50
 GAME_TOP = SCREEN_HEIGHT - UI_HEIGHT
@@ -51,6 +51,7 @@ LEVELS = [
         'name': 'Зоофобии',
         'subtitle': 'Животные и насекомые',
         'bg_color': (10, 13, 10),
+        'gradient': [(5, 8, 5), (10, 13, 10), (15, 20, 15), (25, 35, 20)],
         'accent': (76, 175, 80),
         'star_color': (165, 214, 167),
         'bg_pattern': 'forest',
@@ -71,6 +72,7 @@ LEVELS = [
         'name': 'Гидрофобии',
         'subtitle': 'Морские глубины',
         'bg_color': (5, 10, 30),
+        'gradient': [(3, 5, 20), (5, 10, 30), (8, 20, 50), (10, 30, 70)],
         'accent': (0, 150, 200),
         'star_color': (100, 200, 255),
         'bg_pattern': 'ocean',
@@ -89,6 +91,7 @@ LEVELS = [
         'name': 'Ятрофобии',
         'subtitle': 'Больницы и врачи',
         'bg_color': (25, 10, 15),
+        'gradient': [(15, 5, 8), (25, 10, 15), (40, 15, 25), (55, 20, 35)],
         'accent': (200, 50, 50),
         'star_color': (255, 150, 150),
         'bg_pattern': 'medical',
@@ -107,6 +110,7 @@ LEVELS = [
         'name': 'Агорафобии',
         'subtitle': 'Городские джунгли',
         'bg_color': (20, 20, 25),
+        'gradient': [(12, 12, 18), (20, 20, 25), (35, 30, 35), (50, 40, 45)],
         'accent': (180, 150, 50),
         'star_color': (255, 220, 150),
         'bg_pattern': 'city',
@@ -125,6 +129,7 @@ LEVELS = [
         'name': 'Тревожность',
         'subtitle': 'Тёмные мысли',
         'bg_color': (10, 5, 15),
+        'gradient': [(5, 2, 10), (10, 5, 15), (20, 10, 30), (30, 15, 45)],
         'accent': (150, 50, 200),
         'star_color': (200, 150, 255),
         'bg_pattern': 'abstract',
@@ -143,6 +148,7 @@ LEVELS = [
         'name': 'Экзистенциальный',
         'subtitle': 'Пустота и одиночество',
         'bg_color': (5, 5, 8),
+        'gradient': [(2, 2, 5), (5, 5, 8), (10, 10, 15), (15, 15, 22)],
         'accent': (100, 100, 120),
         'star_color': (200, 200, 210),
         'bg_pattern': 'void',
@@ -161,6 +167,7 @@ LEVELS = [
         'name': 'Технофобии',
         'subtitle': 'Машины и ИИ',
         'bg_color': (8, 12, 18),
+        'gradient': [(4, 6, 12), (8, 12, 18), (12, 30, 25), (16, 50, 30)],
         'accent': (0, 230, 118),
         'star_color': (0, 255, 150),
         'bg_pattern': 'tech',
@@ -179,6 +186,7 @@ LEVELS = [
         'name': 'Космофобии',
         'subtitle': 'Космос и неизвестность',
         'bg_color': (5, 5, 20),
+        'gradient': [(3, 2, 15), (5, 5, 20), (10, 8, 40), (15, 10, 60)],
         'accent': (80, 50, 200),
         'star_color': (180, 180, 255),
         'bg_pattern': 'cosmic',
@@ -197,6 +205,7 @@ LEVELS = [
         'name': 'Мифофобии',
         'subtitle': 'Древние страхи',
         'bg_color': (15, 8, 12),
+        'gradient': [(8, 4, 6), (15, 8, 12), (28, 14, 20), (40, 20, 28)],
         'accent': (200, 100, 20),
         'star_color': (255, 180, 100),
         'bg_pattern': 'myth',
@@ -215,6 +224,7 @@ LEVELS = [
         'name': 'Ксенофобии',
         'subtitle': 'Чужое и неизвестное',
         'bg_color': (10, 5, 18),
+        'gradient': [(5, 2, 12), (10, 5, 18), (20, 10, 35), (30, 15, 50)],
         'accent': (255, 50, 80),
         'star_color': (255, 100, 150),
         'bg_pattern': 'xeno',
@@ -507,21 +517,53 @@ class Powerup:
 
 
 class Particle:
-    def __init__(self, x, y, vx, vy, color, life, size):
+    TYPES = ('spark', 'smoke', 'star', 'glow')
+
+    def __init__(self, x, y, vx, vy, color, life, size, ptype='spark'):
         self.x = x
         self.y = y
         self.vx = vx
         self.vy = vy
         self.color = color
+        self.start_color = color
         self.life = life
         self.max_life = life
         self.size = size
+        self.start_size = size
+        self.ptype = ptype
+        self.rotation = random.random() * math.pi * 2
+        self.rot_speed = random.uniform(-0.2, 0.2)
 
     def update(self):
+        # Физика
         self.x += self.vx
         self.y += self.vy
+        # Гравитация
         self.vy -= 0.15
+        # Сопротивление
+        self.vx *= 0.98
+        self.vy *= 0.98
+        # Вращение
+        self.rotation += self.rot_speed
+
         self.life -= 1
+
+        # Размер уменьшается к концу жизни
+        life_ratio = self.life / self.max_life if self.max_life > 0 else 0
+        if self.ptype == 'smoke':
+            # Дым увеличивается
+            self.size = self.start_size * (1 + (1 - life_ratio) * 2)
+        elif self.ptype in ('spark', 'star'):
+            # Искры/звёзды сужаются
+            self.size = self.start_size * life_ratio
+
+        # Цвет переходит к тёмному/прозрачному
+        fade = max(0, life_ratio)
+        self.color = (
+            int(self.start_color[0] * fade),
+            int(self.start_color[1] * fade),
+            int(self.start_color[2] * fade),
+        )
 
     @property
     def alive(self):
@@ -533,14 +575,32 @@ class Particle:
 
 
 class ParticlePool:
-    def __init__(self, max_particles=150):
+    def __init__(self, max_particles=200):
         self.particles = []
         self.max_particles = max_particles
 
-    def add(self, x, y, vx, vy, color, life, size):
+    def add(self, x, y, vx, vy, color, life, size, ptype='spark'):
         if len(self.particles) >= self.max_particles:
             self.particles.pop(0)
-        self.particles.append(Particle(x, y, vx, vy, color, life, size))
+        self.particles.append(Particle(x, y, vx, vy, color, life, size, ptype))
+
+    def burst(self, x, y, color, count=15, spread=6, ptypes=None):
+        """Выпускает разнотипные частицы."""
+        if ptypes is None:
+            ptypes = ['spark']
+        count = min(count, 25)
+        for _ in range(count):
+            angle = random.random() * math.pi * 2
+            speed = random.random() * spread + 2
+            pt = random.choice(ptypes)
+            sz = random.uniform(1, 4) if pt != 'smoke' else random.uniform(4, 10)
+            self.add(
+                x + random.uniform(-4, 4), y + random.uniform(-4, 4),
+                math.cos(angle) * speed, math.sin(angle) * speed - 1,
+                color,
+                random.randint(15, 35) if pt != 'smoke' else random.randint(20, 45),
+                sz, pt
+            )
 
     def update(self):
         for p in self.particles[:]:
@@ -554,12 +614,25 @@ class ParticlePool:
     def draw(self):
         for p in self.particles:
             alpha = p.alpha
-            if alpha > 0:
-                arcade.draw_circle_filled(
-                    p.x, p.y,
-                    p.size,
-                    (p.color[0], p.color[1], p.color[2], alpha)
-                )
+            if alpha <= 0:
+                continue
+            color = p.color
+            draw_color = (color[0], color[1], color[2], alpha)
+
+            if p.ptype == 'smoke':
+                # Дым — большой размытый круг
+                arcade.draw_circle_filled(p.x, p.y, p.size, draw_color)
+            elif p.ptype == 'spark':
+                # Искра — маленький яркий кружок
+                arcade.draw_circle_filled(p.x, p.y, max(p.size, 0.5), draw_color)
+            elif p.ptype == 'star':
+                # Звёздочка — 4-конечная
+                sz = max(p.size, 0.5)
+                arcade.draw_line(p.x - sz * 2, p.y, p.x + sz * 2, p.y, draw_color, 1.5)
+                arcade.draw_line(p.x, p.y - sz * 2, p.x, p.y + sz * 2, draw_color, 1.5)
+            elif p.ptype == 'glow':
+                # Свечение — большой полупрозрачный
+                arcade.draw_circle_filled(p.x, p.y, p.size * 2, (draw_color[0], draw_color[1], draw_color[2], alpha // 3))
 
 
 # ============================================================
@@ -569,6 +642,22 @@ def draw_rect_filled(center_x, center_y, width, height, color):
     left = center_x - width / 2
     bottom = center_y - height / 2
     arcade.draw_lbwh_rectangle_filled(left, bottom, width, height, color)
+
+
+def draw_gradient_bg(colors: List[Tuple[int, int, int]], steps: int = 32):
+    """Рисует вертикальный градиент из полос."""
+    step_h = SCREEN_HEIGHT / steps
+    for i in range(steps):
+        t = i / (steps - 1)
+        idx = t * (len(colors) - 1)
+        ci = int(idx)
+        cf = idx - ci
+        c1 = colors[min(ci, len(colors) - 1)]
+        c2 = colors[min(ci + 1, len(colors) - 1)]
+        r = int(c1[0] + (c2[0] - c1[0]) * cf)
+        g = int(c1[1] + (c2[1] - c1[1]) * cf)
+        b = int(c1[2] + (c2[2] - c1[2]) * cf)
+        arcade.draw_lbwh_rectangle_filled(0, i * step_h, SCREEN_WIDTH, step_h + 1, (r, g, b))
 
 
 # ============================================================
@@ -718,7 +807,7 @@ class PsychoBattle(arcade.Window):
         self.powerups: List[Powerup] = []
         self.helpers: List[Dict] = []
         self.particle_pool = ParticlePool(max_particles=MAX_PARTICLES)
-        self.stars: List[Dict] = []
+        self.stars: Dict = {}
         self.bombs: List[Dict] = []
 
         self.lives = 3
@@ -805,20 +894,46 @@ class PsychoBattle(arcade.Window):
         self.enemies_per_level = int(diff['enemy_count'])
 
     def init_stars(self):
-        self.stars = []
+        self.stars = {'far': [], 'mid': [], 'near': []}
         theme = self.current_level_data
         star_color = theme.get('star_color', (200, 200, 200))
-        for _ in range(80):
-            self.stars.append({
+        accent = theme.get('accent', (200, 200, 200))
+        # Дальний слой — мелкие, тусклые, еле мерцают
+        for _ in range(50):
+            self.stars['far'].append({
                 'x': random.random() * SCREEN_WIDTH,
                 'y': random.random() * SCREEN_HEIGHT,
-                'size': random.uniform(0.5, 3.0),
-                'speed': random.uniform(0.05, 0.35),
-                'brightness': random.uniform(0.3, 1.0),
+                'size': random.uniform(0.3, 1.0),
+                'speed': 0.1,
+                'brightness': random.uniform(0.15, 0.4),
                 'color': star_color,
-                'twinkle_speed': random.uniform(0.01, 0.04),
+                'twinkle_speed': random.uniform(0.005, 0.015),
                 'twinkle_offset': random.uniform(0, math.pi * 2),
-                'pulse': random.uniform(0.5, 1.5),
+            })
+        # Средний слой — основные звёзды
+        for _ in range(40):
+            self.stars['mid'].append({
+                'x': random.random() * SCREEN_WIDTH,
+                'y': random.random() * SCREEN_HEIGHT,
+                'size': random.uniform(0.8, 2.0),
+                'speed': 0.3,
+                'brightness': random.uniform(0.3, 0.8),
+                'color': star_color,
+                'twinkle_speed': random.uniform(0.01, 0.03),
+                'twinkle_offset': random.uniform(0, math.pi * 2),
+            })
+        # Ближний слой — крупные яркие с акцентным цветом
+        for _ in range(20):
+            c = accent if random.random() < 0.3 else star_color
+            self.stars['near'].append({
+                'x': random.random() * SCREEN_WIDTH,
+                'y': random.random() * SCREEN_HEIGHT,
+                'size': random.uniform(1.5, 3.5),
+                'speed': 0.6,
+                'brightness': random.uniform(0.6, 1.0),
+                'color': c,
+                'twinkle_speed': random.uniform(0.02, 0.05),
+                'twinkle_offset': random.uniform(0, math.pi * 2),
             })
 
     def get_current_level_data(self):
@@ -978,11 +1093,12 @@ class PsychoBattle(arcade.Window):
             self.helpers = []
 
     def update_stars(self):
-        for star in self.stars:
-            star['y'] += star['speed']
-            if star['y'] > SCREEN_HEIGHT:
-                star['y'] = 0
-                star['x'] = random.random() * SCREEN_WIDTH
+        for layer in self.stars.values():
+            for star in layer:
+                star['y'] += star['speed']
+                if star['y'] > SCREEN_HEIGHT:
+                    star['y'] = 0
+                    star['x'] = random.random() * SCREEN_WIDTH
 
     def update_bombs(self):
         for bomb in self.bombs[:]:
@@ -1208,21 +1324,43 @@ class PsychoBattle(arcade.Window):
         self.boss_warning_timer = 120
         self.boss_warning_name = boss_data['name']
         self.enemies = []
-        self.screen_shake = 10
+        self.screen_shake = 15
+        self.flash_effect = 20
         self.boss_spawn_time = self.total_frame
         self._play_sfx('boss_warning')
 
-        for _ in range(15):
+        # Эффектный вход: молнии и волны частиц
+        bx, by = SCREEN_WIDTH / 2, SCREEN_HEIGHT + 60
+        # Ударная волна
+        for _ in range(3):
             angle = random.random() * math.pi * 2
-            speed = random.random() * 4 + 1
-            self.particle_pool.add(
-                SCREEN_WIDTH / 2, SCREEN_HEIGHT + 60,
-                math.cos(angle) * speed,
-                math.sin(angle) * speed,
-                boss_data['color'],
-                random.randint(10, 20),
-                random.uniform(1, 3)
-            )
+            for r in range(5):
+                dist = 20 + r * 15
+                px = bx + math.cos(angle) * dist + random.uniform(-10, 10)
+                py = by + math.sin(angle) * dist + random.uniform(-10, 10)
+                self.particle_pool.add(
+                    px, py,
+                    math.cos(angle) * 2, math.sin(angle) * 2 - r * 0.5,
+                    boss_data['color'],
+                    random.randint(15, 30),
+                    random.uniform(2, 5),
+                    random.choice(['spark', 'glow', 'star'])
+                )
+        # Молнии вокруг точки появления
+        for _ in range(6):
+            angle = random.random() * math.pi * 2
+            dist = random.uniform(40, 120)
+            ex = bx + math.cos(angle) * dist
+            ey = by + math.sin(angle) * dist
+            for seg in range(5):
+                t = seg / 4
+                lx = bx + (ex - bx) * t + random.uniform(-15, 15)
+                ly = by + (ey - by) * t + random.uniform(-15, 15)
+                lightning_alpha = int(200 * (1 - t * 0.5))
+                arcade.draw_circle_filled(lx, ly, 2 + (1 - t) * 2,
+                                          (255, 255, 255, lightning_alpha))
+        # Ударная волна текстом
+        arcade.draw_text("💥", bx, by + 30, (255, 255, 255, 200), font_size=40, anchor_x='center', anchor_y='center')
 
         self.show_affirmation(f"👹 БОСС: {boss_data['name']}", "Приготовься к битве!")
 
@@ -1330,7 +1468,8 @@ class PsychoBattle(arcade.Window):
                 math.sin(angle) * speed - 1,
                 random.choice(colors),
                 random.randint(20, 50),
-                random.uniform(2, 5)
+                random.uniform(2, 5),
+                random.choice(['spark', 'star', 'glow', 'smoke'])
             )
 
         if self.no_damage_run and self.lives == 3:
@@ -1467,18 +1606,13 @@ class PsychoBattle(arcade.Window):
     # ============================================================
 
     def spawn_particles(self, x, y, color, count):
-        count = min(count, 15)
-        for _ in range(count):
-            angle = random.random() * math.pi * 2
-            speed = random.random() * 6 + 2
-            self.particle_pool.add(
-                x, y,
-                math.cos(angle) * speed,
-                math.sin(angle) * speed,
-                color,
-                random.randint(15, 30),
-                random.uniform(1, 4)
-            )
+        count = min(count, 20)
+        ptypes = ['spark', 'glow']
+        if count > 8:
+            ptypes.append('star')
+        if count > 12:
+            ptypes.append('smoke')
+        self.particle_pool.burst(x, y, color, count, spread=6, ptypes=ptypes)
 
     def show_affirmation(self, text, sub=""):
         self.affirmation_text = text
@@ -1560,9 +1694,6 @@ class PsychoBattle(arcade.Window):
             shake_x = (random.random() - 0.5) * self.screen_shake * 1.5
             shake_y = (random.random() - 0.5) * self.screen_shake * 1.5
 
-        bg_color = self.current_level_data['bg_color']
-        draw_rect_filled(SCREEN_WIDTH / 2 + shake_x, SCREEN_HEIGHT / 2 + shake_y, SCREEN_WIDTH, SCREEN_HEIGHT, bg_color)
-
         self.draw_background_pattern()
         self.draw_stars()
         self.draw_particles()
@@ -1629,19 +1760,37 @@ class PsychoBattle(arcade.Window):
             )
 
     def draw_stars(self):
-        for star in self.stars:
-            twinkle = 0.5 + 0.5 * math.sin(
-                self.total_frame * star['twinkle_speed'] + star['twinkle_offset']
-            )
-            alpha = star['brightness'] * twinkle
-            size = star['size'] * (0.5 + 0.5 * twinkle)
-            arcade.draw_circle_filled(
-                star['x'], star['y'],
-                size,
-                (star['color'][0], star['color'][1], star['color'][2], int(alpha * 200))
-            )
+        for layer_name in ('far', 'mid', 'near'):
+            alpha_scale = 0.3 if layer_name == 'far' else (0.6 if layer_name == 'mid' else 1.0)
+            layer = self.stars[layer_name]
+            for star in layer:
+                twinkle = 0.5 + 0.5 * math.sin(
+                    self.total_frame * star['twinkle_speed'] + star['twinkle_offset']
+                )
+                alpha = star['brightness'] * twinkle * alpha_scale
+                size = star['size'] * (0.5 + 0.5 * twinkle)
+                arcade.draw_circle_filled(
+                    star['x'], star['y'],
+                    size,
+                    (star['color'][0], star['color'][1], star['color'][2], int(alpha * 255))
+                )
+                # Для ближнего слоя — крестообразная форма
+                if layer_name == 'near' and star['size'] > 2.0:
+                    cross_alpha = int(alpha * 120)
+                    arcade.draw_line(star['x'] - size * 2, star['y'], star['x'] + size * 2, star['y'],
+                                     (star['color'][0], star['color'][1], star['color'][2], cross_alpha), 1)
+                    arcade.draw_line(star['x'], star['y'] - size * 2, star['x'], star['y'] + size * 2,
+                                     (star['color'][0], star['color'][1], star['color'][2], cross_alpha), 1)
 
     def draw_background_pattern(self):
+        # Градиентная подложка — от тёмного низа к акцентному верху
+        grad = self.current_level_data.get('gradient')
+        if grad:
+            draw_gradient_bg(grad)
+        else:
+            bg = self.current_level_data['bg_color']
+            draw_rect_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, bg)
+
         pattern_type = self.current_level_data.get('bg_pattern', 'default')
 
         if pattern_type == 'forest':
@@ -1706,24 +1855,44 @@ class PsychoBattle(arcade.Window):
         if self.hit_flash > 0 and self.hit_flash % 6 < 3:
             return
 
-        glow_color = (100, 200, 255, 40)
-        arcade.draw_circle_filled(
-            self.player.x, self.player.y,
-            PLAYER_RADIUS * 5,
-            glow_color
-        )
+        px, py = self.player.x, self.player.y
+        pulse = 1 + 0.03 * math.sin(self.total_frame * 0.06)
+
+        # Нейронное свечение — пульсирующая аура
+        glow_color = (100, 200, 255, int(30 + 15 * math.sin(self.total_frame * 0.05)))
+        arcade.draw_circle_filled(px, py, PLAYER_RADIUS * 5 * pulse, glow_color)
+
+        # Нейронные связи
+        neural_color = (100, 180, 255, int(15 + 10 * math.sin(self.total_frame * 0.04)))
+        for i in range(6):
+            angle = i * math.pi / 3 + self.total_frame * 0.01
+            dist = PLAYER_RADIUS * (2.5 + 0.3 * math.sin(self.total_frame * 0.03 + i))
+            tx = px + math.cos(angle) * dist
+            ty = py + math.sin(angle) * dist
+            arcade.draw_line(px + math.cos(angle) * PLAYER_RADIUS * 0.8,
+                             py + math.sin(angle) * PLAYER_RADIUS * 0.8,
+                             tx, ty, neural_color, 1)
+
+        # Мерцающие синапсы на концах связей
+        for i in range(6):
+            angle = i * math.pi / 3 + self.total_frame * 0.01
+            dist = PLAYER_RADIUS * (2.5 + 0.3 * math.sin(self.total_frame * 0.03 + i))
+            tx = px + math.cos(angle) * dist
+            ty = py + math.sin(angle) * dist
+            synapse_alpha = int(60 + 40 * math.sin(self.total_frame * 0.07 + i * 1.5))
+            arcade.draw_circle_filled(tx, ty, 2, (150, 220, 255, synapse_alpha))
 
         if self.powerups_active['shield']:
             shield_pulse = 1 + 0.05 * math.sin(self.total_frame * 0.08)
             arcade.draw_circle_outline(
-                self.player.x, self.player.y,
+                px, py,
                 PLAYER_RADIUS * 2.4 * shield_pulse,
                 (79, 195, 247),
                 3
             )
             shield_glow = (79, 195, 247, 30)
             arcade.draw_circle_filled(
-                self.player.x, self.player.y,
+                px, py,
                 PLAYER_RADIUS * 2.4 * shield_pulse,
                 shield_glow
             )
@@ -1731,7 +1900,7 @@ class PsychoBattle(arcade.Window):
         if self.player.super_charge > 0:
             charge_angle = (self.player.super_charge / 100) * 360
             arcade.draw_arc_outline(
-                self.player.x, self.player.y - PLAYER_RADIUS - 10,
+                px, py - PLAYER_RADIUS - 10,
                 20, 8,
                 (255, 215, 0),
                 0, charge_angle,
@@ -1740,52 +1909,58 @@ class PsychoBattle(arcade.Window):
             if self.player.super_ready:
                 arcade.draw_text(
                     "⚡",
-                    self.player.x, self.player.y - PLAYER_RADIUS - 22,
+                    px, py - PLAYER_RADIUS - 22,
                     (255, 215, 0),
                     font_size=12,
                     anchor_x='center',
                     anchor_y='center'
                 )
 
-        # Рисуем мозг (игрок)
+        # Рисуем мозг (игрок) — улучшенная версия
+        # Левое полушарие
         arcade.draw_ellipse_filled(
-            self.player.x - 6, self.player.y,
+            px - 6, py,
             PLAYER_RADIUS * 0.55 * 2,
             PLAYER_RADIUS * 0.8 * 2,
             (255, 138, 128)
         )
+        # Правое полушарие
         arcade.draw_ellipse_filled(
-            self.player.x + 6, self.player.y,
+            px + 6, py,
             PLAYER_RADIUS * 0.55 * 2,
             PLAYER_RADIUS * 0.8 * 2,
             (240, 98, 146)
         )
+        # Борозда между полушариями
         arcade.draw_ellipse_filled(
-            self.player.x, self.player.y - 2,
-            6,
-                           PLAYER_RADIUS * 0.7 * 2,
+            px, py - 2,
+            6, PLAYER_RADIUS * 0.7 * 2,
             (200, 100, 120, 80)
         )
+        # Блики на полушариях (свет)
         arcade.draw_ellipse_filled(
-            self.player.x - 6, self.player.y - 4,
+            px - 6, py - 4,
             10, 8,
-            (255, 255, 255, 40)
+            (255, 255, 255, int(40 + 20 * math.sin(self.total_frame * 0.05)))
         )
         arcade.draw_ellipse_filled(
-            self.player.x + 6, self.player.y - 4,
+            px + 6, py - 4,
             10, 8,
-            (255, 255, 255, 40)
+            (255, 255, 255, int(40 + 20 * math.sin(self.total_frame * 0.05 + 1)))
         )
-        arcade.draw_circle_filled(
-            self.player.x - 6, self.player.y - 3,
-            4,
-            (255, 100, 150, 80)
-        )
-        arcade.draw_circle_filled(
-            self.player.x + 6, self.player.y - 3,
-            4,
-            (255, 100, 150, 80)
-        )
+        # Зрачки глаз
+        eye_pulse = int(80 + 30 * math.sin(self.total_frame * 0.06))
+        arcade.draw_circle_filled(px - 6, py - 3, 4, (255, 100, 150, eye_pulse))
+        arcade.draw_circle_filled(px + 6, py - 3, 4, (255, 100, 150, eye_pulse))
+
+        # Маленькие нейронные искорки вокруг мозга
+        for i in range(3):
+            spark_angle = self.total_frame * 0.05 + i * math.pi * 2 / 3
+            sd = PLAYER_RADIUS * 1.3
+            sx = px + math.cos(spark_angle) * sd
+            sy = py + math.sin(spark_angle) * sd
+            sa = int(40 + 40 * math.sin(self.total_frame * 0.08 + i * 2))
+            arcade.draw_circle_filled(sx, sy, 1.5, (200, 230, 255, sa))
 
     def draw_enemies(self):
         for enemy in self.enemies:
@@ -2006,39 +2181,45 @@ class PsychoBattle(arcade.Window):
         self.particle_pool.draw()
 
     def draw_ui(self):
-        lives_text = '❤️' * max(0, self.lives) + '🖤' * max(0, 3 - self.lives)
-        arcade.draw_text(
-            lives_text,
-            10, SCREEN_HEIGHT - 32,
-            (255, 255, 255),
-            font_size=20
-        )
+        # Glassmorphism panel наверху
+        arcade.draw_lbwh_rectangle_filled(0, SCREEN_HEIGHT - UI_HEIGHT, SCREEN_WIDTH, UI_HEIGHT,
+                                          (0, 0, 0, 100))
+        arcade.draw_line(0, SCREEN_HEIGHT - UI_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT - UI_HEIGHT,
+                         (255, 255, 255, 20), 1)
 
-        arcade.draw_text(
-            f"🎯 {self.score}",
-            110, SCREEN_HEIGHT - 32,
-            (255, 255, 255),
-            font_size=16
-        )
+        # Жизни — анимированные сердечки
+        lives_text = ''
+        for i in range(3):
+            if i < self.lives:
+                pulse = 1 + 0.08 * math.sin(self.total_frame * 0.08 + i * 2)
+                sz = int(22 * pulse)
+                lives_text += '❤️'
+            else:
+                lives_text += '🖤'
+        arcade.draw_text(lives_text, 10, SCREEN_HEIGHT - 34, (255, 255, 255), font_size=20)
+
+        # HP bar под жизнями (если не полное здоровье)
+        if self.lives < 3 and self.lives > 0:
+            bw = 8 * self.lives
+            hp_pulse = 1 + 0.05 * math.sin(self.total_frame * 0.06)
+            arcade.draw_lbwh_rectangle_filled(10, SCREEN_HEIGHT - 46, 60, 4, (255, 255, 255, 20))
+            hp_color = (79, 195, 247) if self.lives > 1 else (255, 68, 68)
+            arcade.draw_lbwh_rectangle_filled(10, SCREEN_HEIGHT - 46, 20 * self.lives, 4, hp_color)
+
+        # Очки с тенью
+        score_text = f"🎯 {self.score}"
+        arcade.draw_text(score_text, 80, SCREEN_HEIGHT - 34, (0, 0, 0, 100), font_size=16, anchor_x='left')
+        arcade.draw_text(score_text, 80, SCREEN_HEIGHT - 34, (255, 255, 255), font_size=16, anchor_x='left')
 
         theme = self.current_level_data
         level_text = f"🌌 Уровень {self.level}"
-        arcade.draw_text(
-            level_text,
-            SCREEN_WIDTH - 150, SCREEN_HEIGHT - 32,
-            (theme['accent'][0], theme['accent'][1], theme['accent'][2], 200),
-            font_size=14
-        )
+        arcade.draw_text(level_text, SCREEN_WIDTH - 10, SCREEN_HEIGHT - 34,
+                         (theme['accent'][0], theme['accent'][1], theme['accent'][2], 200),
+                         font_size=14, anchor_x='right')
+        arcade.draw_text(f"{theme['name']}", SCREEN_WIDTH - 10, SCREEN_HEIGHT - 50,
+                         (255, 255, 255, 100), font_size=10, anchor_x='right')
 
-        arcade.draw_text(
-            f"{theme['name']}",
-            SCREEN_WIDTH - 150, SCREEN_HEIGHT - 52,
-            (255, 255, 255, 100),
-            font_size=10,
-            anchor_x='left'
-        )
-
-        y_pos = SCREEN_HEIGHT - 52
+        y_pos = SCREEN_HEIGHT - 50
         indicators = []
         if self.powerups_active['shield']:
             indicators.append('🛡️')
@@ -2057,25 +2238,23 @@ class PsychoBattle(arcade.Window):
 
         if indicators:
             text = ' '.join(indicators)
-            arcade.draw_text(
-                text,
-                10, y_pos,
-                (255, 255, 255),
-                font_size=16
-            )
+            arcade.draw_text(text, 10, y_pos, (255, 255, 255, 180), font_size=14)
 
     def draw_combo(self):
         if self.combo > 1:
             alpha = min(1, self.combo / 15)
             size = 18 + min(self.combo, 25)
-            arcade.draw_text(
-                f"🔥 x{self.combo}",
-                SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32,
-                (255, 215, 0, int(alpha * 200)),
-                font_size=size,
-                anchor_x='center',
-                anchor_y='bottom'
-            )
+            # Glow
+            glow_alpha = int(alpha * 60)
+            arcade.draw_text(f"🔥 x{self.combo}", SCREEN_WIDTH / 2 + 1, SCREEN_HEIGHT - 33 + 1,
+                             (255, 215, 0, glow_alpha), font_size=size, anchor_x='center', anchor_y='bottom')
+            arcade.draw_text(f"🔥 x{self.combo}", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 32,
+                             (255, 215, 0, int(alpha * 200)), font_size=size, anchor_x='center', anchor_y='bottom')
+            # Пульсирующий подтекст для высокого комбо
+            if self.combo >= 10:
+                pulse_alpha = int(80 + 60 * math.sin(self.total_frame * 0.08))
+                arcade.draw_text(f"⚡ НЕВЕРОЯТНО ⚡", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 54,
+                                 (255, 215, 0, pulse_alpha), font_size=10, anchor_x='center', anchor_y='bottom')
 
     def draw_progress(self):
         if not self.boss_active and not self.boss_spawned and self.level_complete_timer == 0:

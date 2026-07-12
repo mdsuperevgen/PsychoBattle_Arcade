@@ -57,7 +57,7 @@ const PLAYER_RADIUS = 18;
 const BULLET_SPEED = 8;
 const LASER_SPEED = 14;
 const ENEMY_BASE_SPEED = 1.0;
-const MAX_PARTICLES = 150;
+const MAX_PARTICLES = 200;
 
 const POWERUP_DURATION = { shield: 600, power: 400, laser: 300, helper: 500 };
 
@@ -72,7 +72,7 @@ const DIFFICULTY = {
 // ============================================================
 const LEVELS = [
   { id:'zoo', name:'Зоофобии', subtitle:'Животные и насекомые',
-    bg_color:[10,13,10], accent:[76,175,80], star_color:[165,214,167], bg_pattern:'forest',
+    bg_color:[10,13,10], gradient:[[5,8,5],[10,13,10],[15,20,15],[25,35,20]], accent:[76,175,80], star_color:[165,214,167], bg_pattern:'forest',
     enemies_needed:50,
     enemies:[
       {name:'Паук',emoji:'🕷️',color:[139,0,139],size:32,hp:1},
@@ -86,7 +86,7 @@ const LEVELS = [
     enemy_count:10,
   },
   { id:'ocean', name:'Гидрофобии', subtitle:'Морские глубины',
-    bg_color:[5,10,30], accent:[0,150,200], star_color:[100,200,255], bg_pattern:'ocean',
+    bg_color:[5,10,30], gradient:[[3,5,20],[5,10,30],[8,20,50],[10,30,70]], accent:[0,150,200], star_color:[100,200,255], bg_pattern:'ocean',
     enemies_needed:55,
     enemies:[
       {name:'Акула',emoji:'🦈',color:[80,90,110],size:38,hp:1},
@@ -98,7 +98,7 @@ const LEVELS = [
     enemy_count:12,
   },
   { id:'medical', name:'Ятрофобии', subtitle:'Больницы и врачи',
-    bg_color:[25,10,15], accent:[200,50,50], star_color:[255,150,150], bg_pattern:'medical',
+    bg_color:[25,10,15], gradient:[[15,5,8],[25,10,15],[40,15,25],[55,20,35]], accent:[200,50,50], star_color:[255,150,150], bg_pattern:'medical',
     enemies_needed:60,
     enemies:[
       {name:'Шприц',emoji:'💉',color:[200,200,200],size:30,hp:1},
@@ -110,7 +110,7 @@ const LEVELS = [
     enemy_count:14,
   },
   { id:'city', name:'Агорафобии', subtitle:'Городские джунгли',
-    bg_color:[20,20,25], accent:[180,150,50], star_color:[255,220,150], bg_pattern:'city',
+    bg_color:[20,20,25], gradient:[[12,12,18],[20,20,25],[35,30,35],[50,40,45]], accent:[180,150,50], star_color:[255,220,150], bg_pattern:'city',
     enemies_needed:65,
     enemies:[
       {name:'Толпа',emoji:'👥',color:[120,120,130],size:36,hp:1},
@@ -122,7 +122,7 @@ const LEVELS = [
     enemy_count:16,
   },
   { id:'abstract', name:'Тревожность', subtitle:'Тёмные мысли',
-    bg_color:[10,5,15], accent:[150,50,200], star_color:[200,150,255], bg_pattern:'abstract',
+    bg_color:[10,5,15], gradient:[[5,2,10],[10,5,15],[20,10,30],[30,15,45]], accent:[150,50,200], star_color:[200,150,255], bg_pattern:'abstract',
     enemies_needed:70,
     enemies:[
       {name:'Тень',emoji:'🌑',color:[40,10,50],size:36,hp:2},
@@ -134,7 +134,7 @@ const LEVELS = [
     enemy_count:18,
   },
   { id:'void', name:'Экзистенциальный', subtitle:'Пустота и одиночество',
-    bg_color:[5,5,8], accent:[100,100,120], star_color:[200,200,210], bg_pattern:'void',
+    bg_color:[5,5,8], gradient:[[2,2,5],[5,5,8],[10,10,15],[15,15,22]], accent:[100,100,120], star_color:[200,200,210], bg_pattern:'void',
     enemies_needed:75,
     enemies:[
       {name:'Тишина',emoji:'🤐',color:[60,60,70],size:34,hp:2},
@@ -146,7 +146,7 @@ const LEVELS = [
     enemy_count:20,
   },
   { id:'tech', name:'Технофобии', subtitle:'Машины и ИИ',
-    bg_color:[8,12,18], accent:[0,230,118], star_color:[0,255,150], bg_pattern:'tech',
+    bg_color:[8,12,18], gradient:[[4,6,12],[8,12,18],[12,30,25],[16,50,30]], accent:[0,230,118], star_color:[0,255,150], bg_pattern:'tech',
     enemies_needed:80,
     enemies:[
       {name:'Робот',emoji:'🤖',color:[0,180,80],size:36,hp:2},
@@ -158,7 +158,7 @@ const LEVELS = [
     enemy_count:22,
   },
   { id:'cosmic', name:'Космофобии', subtitle:'Космос и неизвестность',
-    bg_color:[5,5,20], accent:[80,50,200], star_color:[180,180,255], bg_pattern:'cosmic',
+    bg_color:[5,5,20], gradient:[[3,2,15],[5,5,20],[10,8,40],[15,10,60]], accent:[80,50,200], star_color:[180,180,255], bg_pattern:'cosmic',
     enemies_needed:85,
     enemies:[
       {name:'Астероид',emoji:'☄️',color:[180,120,50],size:34,hp:2},
@@ -170,7 +170,7 @@ const LEVELS = [
     enemy_count:24,
   },
   { id:'myth', name:'Мифофобии', subtitle:'Древние страхи',
-    bg_color:[15,8,12], accent:[200,100,20], star_color:[255,180,100], bg_pattern:'myth',
+    bg_color:[15,8,12], gradient:[[8,4,6],[15,8,12],[28,14,20],[40,20,28]], accent:[200,100,20], star_color:[255,180,100], bg_pattern:'myth',
     enemies_needed:90,
     enemies:[
       {name:'Гарпия',emoji:'🦅',color:[150,50,20],size:36,hp:2},
@@ -182,7 +182,7 @@ const LEVELS = [
     enemy_count:26,
   },
   { id:'xeno', name:'Ксенофобии', subtitle:'Чужое и неизвестное',
-    bg_color:[10,5,18], accent:[255,50,80], star_color:[255,100,150], bg_pattern:'xeno',
+    bg_color:[10,5,18], gradient:[[5,2,12],[10,5,18],[20,10,35],[30,15,50]], accent:[255,50,80], star_color:[255,100,150], bg_pattern:'xeno',
     enemies_needed:100,
     enemies:[
       {name:'Мутант',emoji:'👾',color:[200,30,100],size:36,hp:3},
@@ -225,7 +225,7 @@ function initGameState() {
     powerups: [],
     helpers: [],
     particles: [],
-    stars: [],
+    stars: {},
     bombs: [],
 
     lives: 3,
@@ -319,17 +319,35 @@ function applyDifficulty() {
 }
 
 function initStars() {
-  G.stars = [];
   const sc = G.currentLevel.star_color;
-  for (let i = 0; i < 80; i++) {
-    G.stars.push({
+  const ac = G.currentLevel.accent;
+  G.stars = { far: [], mid: [], near: [] };
+  // Far layer
+  for (let i = 0; i < 50; i++) {
+    G.stars.far.push({
       x: Math.random()*W, y: Math.random()*H,
-      size: Math.random()*2.5+0.5,
-      speed: Math.random()*0.3+0.05,
-      brightness: Math.random()*0.7+0.3,
-      color: sc,
-      twinkleSpeed: Math.random()*0.03+0.01,
-      twinkleOffset: Math.random()*Math.PI*2,
+      size: Math.random()*0.7+0.3, speed: 0.1,
+      brightness: Math.random()*0.25+0.15, color: sc,
+      twinkleSpeed: Math.random()*0.01+0.005, twinkleOffset: Math.random()*Math.PI*2,
+    });
+  }
+  // Mid layer
+  for (let i = 0; i < 40; i++) {
+    G.stars.mid.push({
+      x: Math.random()*W, y: Math.random()*H,
+      size: Math.random()*1.2+0.8, speed: 0.3,
+      brightness: Math.random()*0.5+0.3, color: sc,
+      twinkleSpeed: Math.random()*0.02+0.01, twinkleOffset: Math.random()*Math.PI*2,
+    });
+  }
+  // Near layer
+  for (let i = 0; i < 20; i++) {
+    const color = Math.random() < 0.3 ? ac : sc;
+    G.stars.near.push({
+      x: Math.random()*W, y: Math.random()*H,
+      size: Math.random()*2+1.5, speed: 0.6,
+      brightness: Math.random()*0.4+0.6, color: color,
+      twinkleSpeed: Math.random()*0.03+0.02, twinkleOffset: Math.random()*Math.PI*2,
     });
   }
 }
@@ -426,18 +444,27 @@ function getEnemiesNeeded() {
 // PARTICLES
 // ============================================================
 function spawnParticles(x,y,color,count) {
-  count = Math.min(count, 15);
+  count = Math.min(count, 20);
+  const ptypes = ['spark','glow'];
+  if (count > 8) ptypes.push('star');
+  if (count > 12) ptypes.push('smoke');
   for (let i=0; i<count; i++) {
     const angle = Math.random()*Math.PI*2;
     const speed = Math.random()*6+2;
+    const pt = ptypes[Math.floor(Math.random()*ptypes.length)];
+    const sz = pt==='smoke' ? rand(4,10) : rand(1,4);
     G.particles.push({
-      x, y,
-      vx: Math.cos(angle)*speed,
-      vy: Math.sin(angle)*speed - 1,
-      color: color,
-      life: randInt(15,30),
-      maxLife: 30,
-      size: rand(1,4),
+      x: x+rand(-4,4), y: y+rand(-4,4),
+      vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed - 1,
+      color: [...color],
+      startColor: [...color],
+      life: pt==='smoke' ? randInt(20,45) : randInt(15,35),
+      maxLife: 35,
+      size: sz,
+      startSize: sz,
+      ptype: pt,
+      rotation: Math.random()*Math.PI*2,
+      rotSpeed: rand(-0.2,0.2),
     });
   }
   if (G.particles.length > MAX_PARTICLES) G.particles.splice(0, G.particles.length - MAX_PARTICLES);
@@ -493,10 +520,52 @@ function spawnBoss() {
   G.bossWarningTimer = 120;
   G.bossWarningName = bd.name;
   G.enemies = [];
-  G.screenShake = 10;
+  G.screenShake = 15;
+  G.flashEffect = 20;
   G.bossSpawnTime = G.totalFrame;
   playBossWarning();
-  spawnParticles(W/2, H+60, bd.color, 15);
+
+  const bx = W/2, by = H+60;
+
+  // Shockwave particles
+  for (let i=0; i<3; i++) {
+    const angle = Math.random()*Math.PI*2;
+    for (let r=0; r<5; r++) {
+      const dist = 20 + r*15;
+      const px = bx + Math.cos(angle)*dist + rand(-10,10);
+      const py = by + Math.sin(angle)*dist + rand(-10,10);
+      G.particles.push({
+        x: px, y: py,
+        vx: Math.cos(angle)*2, vy: Math.sin(angle)*2 - r*0.5,
+        color: [...bd.color], startColor: [...bd.color],
+        life: randInt(15,30), maxLife: 30,
+        size: rand(2,5), startSize: rand(2,5),
+        ptype: ['spark','glow','star'][randInt(0,2)],
+        rotation: 0, rotSpeed: 0,
+      });
+    }
+  }
+  // Lightning bolts
+  for (let i=0; i<6; i++) {
+    const angle = Math.random()*Math.PI*2;
+    const dist = rand(40, 120);
+    const ex = bx + Math.cos(angle)*dist;
+    const ey = by + Math.sin(angle)*dist;
+    for (let seg=0; seg<5; seg++) {
+      const t = seg/4;
+      const lx = bx + (ex-bx)*t + rand(-15,15);
+      const ly = by + (ey-by)*t + rand(-15,15);
+      const la = Math.floor(200 * (1 - t*0.5));
+      G.particles.push({
+        x: lx, y: ly, vx: 0, vy: 0,
+        color: [255,255,255], startColor: [255,255,255],
+        life: 10+seg*2, maxLife: 20,
+        size: 1 + (1-t)*2, startSize: 1+(1-t)*2,
+        ptype: 'spark', rotation: 0, rotSpeed: 0,
+      });
+    }
+  }
+
   showAffirmation(`👹 БОСС: ${bd.name}`, 'Приготовься к битве!');
 }
 
@@ -943,7 +1012,9 @@ function update(dt) {
   }
 
   // Stars
-  G.stars.forEach(s => { s.y += s.speed; if (s.y>H) { s.y=0; s.x=Math.random()*W; } });
+  ['far','mid','near'].forEach(name => {
+    G.stars[name].forEach(s => { s.y += s.speed; if (s.y>H) { s.y=0; s.x=Math.random()*W; } });
+  });
 
   // Bombs
   G.bombs.forEach(b => { b.y+=2; b.r+=1; b.life--; });
@@ -951,7 +1022,21 @@ function update(dt) {
 
   // Particles
   G.particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy; p.vy -= 0.15; p.life--;
+    p.x += p.vx; p.y += p.vy;
+    p.vy -= 0.15;
+    p.vx *= 0.98; p.vy *= 0.98;
+    p.rotation += p.rotSpeed || 0;
+    p.life--;
+    const lr = Math.max(0, p.life / p.maxLife);
+    // Size
+    if (p.ptype === 'smoke') p.size = p.startSize * (1 + (1-lr)*2);
+    else p.size = p.startSize * lr;
+    // Color fade
+    if (p.startColor) {
+      p.color[0] = Math.floor(p.startColor[0] * lr);
+      p.color[1] = Math.floor(p.startColor[1] * lr);
+      p.color[2] = Math.floor(p.startColor[2] * lr);
+    }
   });
   G.particles = G.particles.filter(p => p.life>0);
 
@@ -1057,7 +1142,9 @@ function draw() {
   ctx.translate(sx, sy);
 
   const bg = G.currentLevel.bg_color;
-  rectFilled(W/2, H/2, W, H, bg);
+  const grad = G.currentLevel.gradient;
+  if (grad) drawGradientBg(grad);
+  else { rectFilled(W/2, H/2, W, H, bg); }
   drawBackgroundPattern();
   drawStars();
   drawParticles();
@@ -1117,15 +1204,43 @@ function draw() {
 }
 
 function drawStars() {
-  G.stars.forEach(s => {
-    const tw = 0.5 + 0.5*Math.sin(G.totalFrame*s.twinkleSpeed + s.twinkleOffset);
-    const alpha = s.brightness * tw;
-    const sz = s.size * (0.5+0.5*tw);
-    ctx.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${alpha*0.8})`;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, sz, 0, Math.PI*2);
-    ctx.fill();
+  const layers = ['far', 'mid', 'near'];
+  layers.forEach((name, li) => {
+    const alphaScale = li === 0 ? 0.3 : (li === 1 ? 0.6 : 1.0);
+    G.stars[name].forEach(s => {
+      const tw = 0.5 + 0.5*Math.sin(G.totalFrame*s.twinkleSpeed + s.twinkleOffset);
+      const alpha = s.brightness * tw * alphaScale;
+      const sz = s.size * (0.5+0.5*tw);
+      ctx.fillStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${alpha})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, sz, 0, Math.PI*2); ctx.fill();
+      // Cross glow for bright near stars
+      if (name === 'near' && s.size > 2.0) {
+        const ca = Math.floor(alpha * 120);
+        ctx.strokeStyle = `rgba(${s.color[0]},${s.color[1]},${s.color[2]},${ca/255})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(s.x - sz*2, s.y); ctx.lineTo(s.x + sz*2, s.y); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(s.x, s.y - sz*2); ctx.lineTo(s.x, s.y + sz*2); ctx.stroke();
+      }
+    });
   });
+}
+
+function drawGradientBg(colors) {
+  const steps = 32;
+  const stepH = H / steps;
+  for (let i = 0; i < steps; i++) {
+    const t = i / (steps - 1);
+    const idx = t * (colors.length - 1);
+    const ci = Math.floor(idx);
+    const cf = idx - ci;
+    const c1 = colors[Math.min(ci, colors.length - 1)];
+    const c2 = colors[Math.min(ci + 1, colors.length - 1)];
+    const r = Math.round(c1[0] + (c2[0] - c1[0]) * cf);
+    const g = Math.round(c1[1] + (c2[1] - c1[1]) * cf);
+    const b = Math.round(c1[2] + (c2[2] - c1[2]) * cf);
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(0, i * stepH, W, stepH + 1);
+  }
 }
 
 function drawBackgroundPattern() {
@@ -1213,16 +1328,40 @@ function drawBackgroundPattern() {
 function drawPlayer() {
   if (G.hitFlash>0 && G.hitFlash%6<3) return;
 
-  // glow
-  ctx.fillStyle = 'rgba(100,200,255,0.15)';
-  ctx.beginPath(); ctx.arc(G.player.x, G.player.y, PLAYER_RADIUS*5, 0, Math.PI*2); ctx.fill();
+  const px = G.player.x, py = G.player.y;
+  const pulse = 1 + 0.03*Math.sin(G.totalFrame*0.06);
+  const tf = G.totalFrame;
+
+  // Neural glow aura
+  const glowA = Math.floor(30 + 15*Math.sin(tf*0.05));
+  ctx.fillStyle = `rgba(100,200,255,${glowA/255})`;
+  ctx.beginPath(); ctx.arc(px, py, PLAYER_RADIUS*5*pulse, 0, Math.PI*2); ctx.fill();
+
+  // Neural connections
+  for (let i=0; i<6; i++) {
+    const a = i*Math.PI/3 + tf*0.01;
+    const dist = PLAYER_RADIUS*(2.5 + 0.3*Math.sin(tf*0.03+i));
+    const tx = px + Math.cos(a)*dist;
+    const ty = py + Math.sin(a)*dist;
+    const na = Math.floor(15 + 10*Math.sin(tf*0.04));
+    ctx.strokeStyle = `rgba(100,180,255,${na/255})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px + Math.cos(a)*PLAYER_RADIUS*0.8, py + Math.sin(a)*PLAYER_RADIUS*0.8);
+    ctx.lineTo(tx, ty);
+    ctx.stroke();
+    // Synapse
+    const sa = Math.floor(60 + 40*Math.sin(tf*0.07+i*1.5));
+    ctx.fillStyle = `rgba(150,220,255,${sa/255})`;
+    ctx.beginPath(); ctx.arc(tx, ty, 2, 0, Math.PI*2); ctx.fill();
+  }
 
   // shield
   if (G.powerupsActive.shield) {
-    const pulse = 1+0.05*Math.sin(G.totalFrame*0.08);
+    const sp = 1+0.05*Math.sin(tf*0.08);
     ctx.strokeStyle = 'rgba(79,195,247,0.8)';
     ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(G.player.x, G.player.y, PLAYER_RADIUS*2.4*pulse, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, py, PLAYER_RADIUS*2.4*sp, 0, Math.PI*2); ctx.stroke();
   }
 
   // super charge
@@ -1230,14 +1369,36 @@ function drawPlayer() {
     const angle = (G.player.superCharge/100)*360;
     ctx.strokeStyle = 'rgba(255,215,0,0.8)';
     ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(G.player.x, G.player.y-PLAYER_RADIUS-10, 10, 0, angle*Math.PI/180); ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, py-PLAYER_RADIUS-10, 10, 0, angle*Math.PI/180); ctx.stroke();
   }
 
-  // brain
-  const px = G.player.x, py = G.player.y;
-  ctx.fillStyle = '#ff8a80'; ctx.beginPath(); ctx.ellipse(px-6,py,11,14,0,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#f06292'; ctx.beginPath(); ctx.ellipse(px+6,py,11,14,0,0,Math.PI*2); ctx.fill();
-  ctx.fillStyle = 'rgba(200,100,120,0.3)'; ctx.beginPath(); ctx.ellipse(px,py-2,3,12,0,0,Math.PI*2); ctx.fill();
+  // brain hemispheres
+  ctx.fillStyle = '#ff8a80'; ctx.beginPath(); ctx.ellipse(px-6, py, 11, 14, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#f06292'; ctx.beginPath(); ctx.ellipse(px+6, py, 11, 14, 0, 0, Math.PI*2); ctx.fill();
+  // groove
+  ctx.fillStyle = 'rgba(200,100,120,0.3)'; ctx.beginPath(); ctx.ellipse(px, py-2, 3, 12, 0, 0, Math.PI*2); ctx.fill();
+  // highlights
+  const hl = Math.floor(40 + 20*Math.sin(tf*0.05));
+  ctx.fillStyle = `rgba(255,255,255,${hl/255})`;
+  ctx.beginPath(); ctx.ellipse(px-6, py-4, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = `rgba(255,255,255,${Math.floor(40+20*Math.sin(tf*0.05+1))/255})`;
+  ctx.beginPath(); ctx.ellipse(px+6, py-4, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+  // pupils
+  const ep = Math.floor(80 + 30*Math.sin(tf*0.06));
+  ctx.fillStyle = `rgba(255,100,150,${ep/255})`;
+  ctx.beginPath(); ctx.arc(px-6, py-3, 4, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(px+6, py-3, 4, 0, Math.PI*2); ctx.fill();
+
+  // Neural sparks around brain
+  for (let i=0; i<3; i++) {
+    const sa = tf*0.05 + i*Math.PI*2/3;
+    const sd = PLAYER_RADIUS*1.3;
+    const sx = px + Math.cos(sa)*sd;
+    const sy = py + Math.sin(sa)*sd;
+    const spa = Math.floor(40 + 40*Math.sin(tf*0.08+i*2));
+    ctx.fillStyle = `rgba(200,230,255,${spa/255})`;
+    ctx.beginPath(); ctx.arc(sx, sy, 1.5, 0, Math.PI*2); ctx.fill();
+  }
 }
 
 function drawBullets() {
@@ -1362,8 +1523,25 @@ function drawHelpers() {
 function drawParticles() {
   G.particles.forEach(p => {
     const alpha = p.life/p.maxLife;
-    ctx.fillStyle = `rgba(${p.color[0]},${p.color[1]},${p.color[2]},${alpha})`;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.size*alpha,0,Math.PI*2); ctx.fill();
+    if (alpha <= 0) return;
+    const c = p.color;
+    const a = Math.floor(alpha * 255);
+    if (p.ptype === 'smoke') {
+      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha*0.6})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size*alpha, 0, Math.PI*2); ctx.fill();
+    } else if (p.ptype === 'spark') {
+      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(p.size,0.5), 0, Math.PI*2); ctx.fill();
+    } else if (p.ptype === 'star') {
+      const sz = Math.max(p.size, 0.5);
+      ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(p.x - sz*2, p.y); ctx.lineTo(p.x + sz*2, p.y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.x, p.y - sz*2); ctx.lineTo(p.x, p.y + sz*2); ctx.stroke();
+    } else if (p.ptype === 'glow') {
+      ctx.fillStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha*0.3})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size*2, 0, Math.PI*2); ctx.fill();
+    }
   });
 }
 
@@ -1382,10 +1560,20 @@ function drawCombo() {
   if (G.combo > 1) {
     const alpha = Math.min(1, G.combo/15);
     const sz = 18+Math.min(G.combo,25);
-    ctx.fillStyle = `rgba(255,215,0,${alpha*0.8})`;
-    ctx.font = `${sz}px sans-serif`;
     ctx.textAlign='center'; ctx.textBaseline='bottom';
-    ctx.fillText(`🔥 x${G.combo}`, W/2, 32);
+    // Glow
+    ctx.fillStyle = `rgba(255,215,0,${alpha*0.3})`;
+    ctx.font = `${sz}px sans-serif`;
+    ctx.fillText(`🔥 x${G.combo}`, W/2+1, 32);
+    ctx.fillStyle = `rgba(255,215,0,${alpha*0.8})`;
+    ctx.fillText(`🔥 x${G.combo}`, W/2, 31);
+    // Pulsing subtitle for high combo
+    if (G.combo >= 10) {
+      const pa = Math.floor(80 + 60*Math.sin(G.totalFrame*0.08));
+      ctx.fillStyle = `rgba(255,215,0,${pa/255})`;
+      ctx.font = '10px sans-serif';
+      ctx.fillText('⚡ НЕВЕРОЯТНО ⚡', W/2, 18);
+    }
   }
 }
 
@@ -1416,15 +1604,28 @@ function drawAffirmation() {
 }
 
 function drawUI() {
+  // Glass panel
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.fillRect(0, 0, W, UI_H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, UI_H); ctx.lineTo(W, UI_H); ctx.stroke();
+
   // lives
   let livesStr = '';
-  for (let i=0; i<3; i++) livesStr += i<G.lives ? '❤️' : '🖤';
+  for (let i=0; i<3; i++) {
+    if (i < G.lives) {
+      const pulse = 1 + 0.08*Math.sin(G.totalFrame*0.08 + i*2);
+      livesStr += '❤️';
+    } else livesStr += '🖤';
+  }
   ctx.font='20px sans-serif'; ctx.textAlign='left'; ctx.textBaseline='bottom';
   ctx.fillText(livesStr, 10, H-5);
 
-  // score
-  ctx.fillStyle='#fff'; ctx.font='16px sans-serif';
-  ctx.fillText(`🎯 ${G.score}`, 110, H-5);
+  // score with shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.font='16px sans-serif';
+  ctx.fillText(`🎯 ${G.score}`, 81, H-4);
+  ctx.fillStyle='#fff'; ctx.fillText(`🎯 ${G.score}`, 80, H-5);
 
   // level
   const ac = G.currentLevel.accent;
@@ -1443,8 +1644,29 @@ function drawUI() {
   if (G.powerupsActive.barrier) ind.push('🛡️');
   if (G.bombCooldown>0) ind.push(`⏳${Math.floor(G.bombCooldown/60)+1}s`);
   if (ind.length) {
-    ctx.font='16px sans-serif'; ctx.textAlign='left';
-    ctx.fillText(ind.join(' '), 10, H-25);
+    ctx.font='14px sans-serif'; ctx.textAlign='left';
+    ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.fillText(ind.join(' '), 10, H-25);
+  }
+}
+
+function drawCombo() {
+  if (G.combo > 1) {
+    const alpha = Math.min(1, G.combo/15);
+    const sz = 18+Math.min(G.combo,25);
+    ctx.textAlign='center'; ctx.textBaseline='bottom';
+    // Glow
+    ctx.fillStyle = `rgba(255,215,0,${alpha*0.3})`;
+    ctx.font = `${sz}px sans-serif`;
+    ctx.fillText(`🔥 x${G.combo}`, W/2+1, 32);
+    ctx.fillStyle = `rgba(255,215,0,${alpha*0.8})`;
+    ctx.fillText(`🔥 x${G.combo}`, W/2, 31);
+    // Pulsing subtitle for high combo
+    if (G.combo >= 10) {
+      const pa = Math.floor(80 + 60*Math.sin(G.totalFrame*0.08));
+      ctx.fillStyle = `rgba(255,215,0,${pa/255})`;
+      ctx.font = '10px sans-serif';
+      ctx.fillText('⚡ НЕВЕРОЯТНО ⚡', W/2, 18);
+    }
   }
 }
 
