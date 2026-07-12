@@ -1770,9 +1770,9 @@ function drawLevelIntro() {
       else cur = cur ? cur + ' ' + w : w;
     });
     if (cur) lines.push(cur);
-    let yo = 425;
+    let yo = 425 - (lines.length - 1) * 20;
     ctx.fillStyle = 'rgba(230,230,255,0.9)'; ctx.font='14px sans-serif';
-    lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo -= 20; });
+    lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo += 20; });
   }
 
   // Boss name
