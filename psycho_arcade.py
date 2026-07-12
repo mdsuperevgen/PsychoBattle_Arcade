@@ -1879,30 +1879,49 @@ class PsychoBattle(arcade.Window):
 
         px, py = self.player.x, self.player.y
         pulse = 1 + 0.03 * math.sin(self.total_frame * 0.06)
+        tf = self.total_frame
 
-        # Нейронное свечение — пульсирующая аура
-        glow_color = (100, 200, 255, int(30 + 15 * math.sin(self.total_frame * 0.05)))
-        arcade.draw_circle_filled(px, py, PLAYER_RADIUS * 5 * pulse, glow_color)
+        # Нейронное свечение — пульсирующая аура с градиентным эффектом
+        glow_alpha = int(25 + 20 * math.sin(tf * 0.05))
+        for r in range(3, -1, -1):
+            radius = PLAYER_RADIUS * (3 + r * 0.8) * pulse
+            a = glow_alpha // (r + 1)
+            arcade.draw_circle_filled(px, py, radius, (60, 160, 255, a))
 
-        # Нейронные связи
-        neural_color = (100, 180, 255, int(15 + 10 * math.sin(self.total_frame * 0.04)))
-        for i in range(6):
-            angle = i * math.pi / 3 + self.total_frame * 0.01
-            dist = PLAYER_RADIUS * (2.5 + 0.3 * math.sin(self.total_frame * 0.03 + i))
+        # Нейронные связи — более динамичные
+        neural_points = []
+        for i in range(8):
+            angle = i * math.pi / 4 + tf * 0.008
+            dist = PLAYER_RADIUS * (2.2 + 0.4 * math.sin(tf * 0.025 + i * 0.9))
             tx = px + math.cos(angle) * dist
             ty = py + math.sin(angle) * dist
-            arcade.draw_line(px + math.cos(angle) * PLAYER_RADIUS * 0.8,
-                             py + math.sin(angle) * PLAYER_RADIUS * 0.8,
-                             tx, ty, neural_color, 1)
+            neural_points.append((tx, ty))
+
+            na = int(20 + 15 * math.sin(tf * 0.03 + i))
+            arcade.draw_line(
+                px + math.cos(angle) * PLAYER_RADIUS * 0.7,
+                py + math.sin(angle) * PLAYER_RADIUS * 0.7,
+                tx, ty,
+                (80, 180, 255, na), 1.5
+            )
+
+        # Связи между нейронными точками (сетка)
+        for i in range(len(neural_points)):
+            for j in range(i + 1, len(neural_points)):
+                if (j - i) <= 2:
+                    na = int(8 + 6 * math.sin(tf * 0.02 + i + j))
+                    arcade.draw_line(
+                        neural_points[i][0], neural_points[i][1],
+                        neural_points[j][0], neural_points[j][1],
+                        (60, 140, 255, na), 0.5
+                    )
 
         # Мерцающие синапсы на концах связей
-        for i in range(6):
-            angle = i * math.pi / 3 + self.total_frame * 0.01
-            dist = PLAYER_RADIUS * (2.5 + 0.3 * math.sin(self.total_frame * 0.03 + i))
-            tx = px + math.cos(angle) * dist
-            ty = py + math.sin(angle) * dist
-            synapse_alpha = int(60 + 40 * math.sin(self.total_frame * 0.07 + i * 1.5))
-            arcade.draw_circle_filled(tx, ty, 2, (150, 220, 255, synapse_alpha))
+        for i in range(8):
+            tx, ty = neural_points[i]
+            synapse_alpha = int(50 + 50 * math.sin(tf * 0.06 + i * 1.3))
+            synapse_size = 1.5 + 0.8 * math.sin(tf * 0.05 + i * 2)
+            arcade.draw_circle_filled(tx, ty, synapse_size, (140, 220, 255, synapse_alpha))
 
         if self.powerups_active['shield']:
             shield_pulse = 1 + 0.05 * math.sin(self.total_frame * 0.08)
@@ -1938,51 +1957,75 @@ class PsychoBattle(arcade.Window):
                     anchor_y='center'
                 )
 
-        # Рисуем мозг (игрок) — улучшенная версия
-        # Левое полушарие
+        # Рисуем мозг — улучшенная версия с детализацией
+        # Тень под мозгом
+        arcade.draw_ellipse_filled(px, py - 8, PLAYER_RADIUS * 1.8 * pulse,
+                                   PLAYER_RADIUS * 1.2 * pulse, (0, 0, 0, 40))
+
+        # Левое полушарие с градиентным оттенком
         arcade.draw_ellipse_filled(
-            px - 6, py,
+            px - 7, py,
             PLAYER_RADIUS * 0.55 * 2,
-            PLAYER_RADIUS * 0.8 * 2,
+            PLAYER_RADIUS * 0.82 * 2,
             (255, 138, 128)
         )
         # Правое полушарие
         arcade.draw_ellipse_filled(
-            px + 6, py,
+            px + 7, py,
             PLAYER_RADIUS * 0.55 * 2,
-            PLAYER_RADIUS * 0.8 * 2,
+            PLAYER_RADIUS * 0.82 * 2,
             (240, 98, 146)
         )
         # Борозда между полушариями
         arcade.draw_ellipse_filled(
             px, py - 2,
-            6, PLAYER_RADIUS * 0.7 * 2,
-            (200, 100, 120, 80)
+            5, PLAYER_RADIUS * 0.7 * 2,
+            (180, 80, 110, 90)
         )
-        # Блики на полушариях (свет)
-        arcade.draw_ellipse_filled(
-            px - 6, py - 4,
-            10, 8,
-            (255, 255, 255, int(40 + 20 * math.sin(self.total_frame * 0.05)))
-        )
-        arcade.draw_ellipse_filled(
-            px + 6, py - 4,
-            10, 8,
-            (255, 255, 255, int(40 + 20 * math.sin(self.total_frame * 0.05 + 1)))
-        )
-        # Зрачки глаз
-        eye_pulse = int(80 + 30 * math.sin(self.total_frame * 0.06))
-        arcade.draw_circle_filled(px - 6, py - 3, 4, (255, 100, 150, eye_pulse))
-        arcade.draw_circle_filled(px + 6, py - 3, 4, (255, 100, 150, eye_pulse))
-
-        # Маленькие нейронные искорки вокруг мозга
+        # Извилины — линии на полушариях
         for i in range(3):
-            spark_angle = self.total_frame * 0.05 + i * math.pi * 2 / 3
-            sd = PLAYER_RADIUS * 1.3
+            offset = (i - 1) * 5
+            lx = px - 7 + offset
+            rx = px + 7 + offset
+            yy = py + (i - 1) * 6
+            arcade.draw_line(
+                lx - 6, yy, lx + 6, yy,
+                (200, 100, 120, int(40 + 20 * math.sin(tf * 0.04 + i))), 1
+            )
+            arcade.draw_line(
+                rx - 6, yy, rx + 6, yy,
+                (190, 90, 110, int(40 + 20 * math.sin(tf * 0.04 + i + 1))), 1
+            )
+
+        # Блики на полушариях (свет)
+        hl = int(40 + 25 * math.sin(tf * 0.05))
+        arcade.draw_ellipse_filled(
+            px - 7, py - 5,
+            10, 8,
+            (255, 255, 255, hl)
+        )
+        arcade.draw_ellipse_filled(
+            px + 7, py - 5,
+            10, 8,
+            (255, 255, 255, int(40 + 25 * math.sin(tf * 0.05 + 1)))
+        )
+        # Зрачки глаз — пульсирующие
+        eye_pulse = int(80 + 40 * math.sin(tf * 0.06))
+        arcade.draw_circle_filled(px - 6, py - 3, 4, (255, 80, 130, eye_pulse))
+        arcade.draw_circle_filled(px + 6, py - 3, 4, (255, 80, 130, eye_pulse))
+        # Зрачки
+        arcade.draw_circle_filled(px - 6, py - 4, 2, (255, 255, 255, 180))
+        arcade.draw_circle_filled(px + 6, py - 4, 2, (255, 255, 255, 180))
+
+        # Нейронные искорки вокруг мозга
+        for i in range(5):
+            spark_angle = tf * 0.04 + i * math.pi * 2 / 5
+            sd = PLAYER_RADIUS * (1.1 + 0.3 * math.sin(tf * 0.03 + i))
             sx = px + math.cos(spark_angle) * sd
             sy = py + math.sin(spark_angle) * sd
-            sa = int(40 + 40 * math.sin(self.total_frame * 0.08 + i * 2))
-            arcade.draw_circle_filled(sx, sy, 1.5, (200, 230, 255, sa))
+            sa = int(30 + 50 * math.sin(tf * 0.07 + i * 2))
+            ss = 1.2 + 0.8 * math.sin(tf * 0.06 + i * 1.5)
+            arcade.draw_circle_filled(sx, sy, ss, (180, 230, 255, sa))
 
     def draw_enemies(self):
         for enemy in self.enemies:
@@ -2003,30 +2046,46 @@ class PsychoBattle(arcade.Window):
             if enemy.special_type == 'diver' and not enemy.special_visible:
                 continue
 
-            # Пульсирующее свечение
-            glow_pulse = 1 + 0.08 * math.sin(tf * 0.04 + enemy.wobble)
-            glow_alpha = int((80 if enemy.hit_timer == 0 else 200) * glow_pulse)
-            arcade.draw_circle_filled(
-                ex, ey,
-                enemy.radius * 3.5 * (1 + 0.05 * math.sin(tf * 0.03 + enemy.wobble)),
-                (enemy.color[0], enemy.color[1], enemy.color[2], min(glow_alpha, 255))
-            )
+            # Внешнее свечение — многослойное
+            glow_base = 1 + 0.08 * math.sin(tf * 0.04 + enemy.wobble)
+            glow_alpha = int((80 if enemy.hit_timer == 0 else 200) * glow_base)
+            for g in range(3):
+                g_radius = enemy.radius * (2.5 + g * 0.8) * (1 + 0.04 * math.sin(tf * 0.03 + enemy.wobble + g))
+                g_alpha = glow_alpha // (g + 2)
+                arcade.draw_circle_filled(
+                    ex, ey, g_radius,
+                    (enemy.color[0], enemy.color[1], enemy.color[2], min(g_alpha, 180))
+                )
 
             # Аура-кольцо для типов врагов
             if enemy.special_type:
-                ring_alpha = int(60 + 40 * math.sin(tf * 0.05 + enemy.wobble))
+                ring_alpha = int(70 + 50 * math.sin(tf * 0.05 + enemy.wobble))
                 arcade.draw_circle_outline(
                     ex, ey,
                     enemy.radius * 2.2 + 3 * math.sin(tf * 0.04 + enemy.wobble),
                     (enemy.color[0], enemy.color[1], enemy.color[2], ring_alpha),
                     2
                 )
+                # Тип врага текстом
+                type_label = enemy.special_type.upper()
+                arcade.draw_text(
+                    type_label, ex, ey + enemy.radius + 8,
+                    (255, 255, 255, ring_alpha // 2),
+                    font_size=7, anchor_x='center', anchor_y='center'
+                )
 
-            # Эффект получения урона — scale bounce
+            # Эффект получения урона — scale bounce + вспышка
             hit_scale = 1.0
             if enemy.hit_timer > 0:
                 hit_scale = 1.0 + 0.15 * math.sin(enemy.hit_timer * 0.8)
+                # Вспышка при попадании
+                flash_a = int(100 * (enemy.hit_timer / 10))
+                arcade.draw_circle_filled(ex, ey, enemy.radius * 1.5, (255, 255, 255, flash_a))
 
+            # Тень под врагом
+            arcade.draw_ellipse_filled(ex, ey - enemy.radius * 0.8, enemy.radius * 1.5, 4, (0, 0, 0, 30))
+
+            # Сам враг
             size = enemy.radius * 1.8 * hit_scale
             arcade.draw_text(
                 enemy.emoji,
@@ -2066,31 +2125,45 @@ class PsychoBattle(arcade.Window):
             return
 
         b = self.boss
+        tf = self.total_frame
 
-        glow_alpha = 100 if b.hit_timer == 0 else 200
-        arcade.draw_circle_filled(
-            b.x, b.y,
-            b.radius * 6 * b.scale,
-            (b.color[0], b.color[1], b.color[2], glow_alpha)
-        )
-
-        for ring in range(3):
-            ring_size = (b.radius * (2 + ring * 0.8) * b.scale +
-                         math.sin(self.total_frame * (0.03 + ring * 0.01) + ring * 1.5) * (8 + ring * 3))
-            arcade.draw_circle_outline(
-                b.x, b.y,
-                ring_size,
-                (b.color[0], b.color[1], b.color[2], 30 - ring * 8),
-                2 - ring * 0.4
+        # Ослепительное свечение — многослойное
+        glow_alpha = 120 if b.hit_timer == 0 else 220
+        for g in range(4):
+            g_radius = b.radius * (4 + g * 1.2) * b.scale + math.sin(tf * (0.02 + g * 0.008)) * 10
+            g_alpha = glow_alpha // (g + 1)
+            arcade.draw_circle_filled(
+                b.x, b.y, g_radius,
+                (b.color[0], b.color[1], b.color[2], g_alpha)
             )
 
+        # Пульсирующие кольца с разной частотой
+        for ring in range(4):
+            ring_size = (b.radius * (1.8 + ring * 0.7) * b.scale +
+                         math.sin(tf * (0.025 + ring * 0.012) + ring * 1.2) * (10 + ring * 4))
+            ring_alpha = 40 - ring * 9
+            arcade.draw_circle_outline(
+                b.x, b.y, ring_size,
+                (b.color[0], b.color[1], b.color[2], max(ring_alpha, 5)),
+                max(1.5 - ring * 0.3, 0.5)
+            )
+
+        # Внутренняя подсветка
         arcade.draw_circle_filled(
             b.x, b.y,
-            b.radius * 1.4 * b.scale,
-            (b.color[0], b.color[1], b.color[2], 100)
+            b.radius * 1.6 * b.scale,
+            (b.color[0], b.color[1], b.color[2], 80)
         )
 
-        size = b.radius * 2.4 * b.scale
+        # Тень под боссом
+        arcade.draw_ellipse_filled(
+            b.x, b.y - b.radius * 1.5 * b.scale,
+            b.radius * 2.5 * b.scale, 6,
+            (0, 0, 0, 50)
+        )
+
+        # Эмодзи босса с пульсацией
+        size = b.radius * 2.6 * b.scale
         arcade.draw_text(
             b.emoji,
             b.x, b.y,
@@ -2372,55 +2445,55 @@ class PsychoBattle(arcade.Window):
 
     def draw_level_intro(self):
         """Экран вступления уровня с психологическим описанием."""
-        draw_rect_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, (0, 0, 0, 230))
+        draw_rect_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, (0, 0, 0, 240))
 
         if not self.level_intro_data:
             return
 
         data = self.level_intro_data
-
-        # Название уровня
-        arcade.draw_text(
-            f"🌌 УРОВЕНЬ {data['level']}",
-            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 100,
-            (255, 255, 255, 150),
-            font_size=18,
-            anchor_x='center',
-            anchor_y='center'
-        )
-
-        # Название фобии
         theme = self.current_level_data
         accent = theme.get('accent', (108, 92, 231))
+
+        # Верхняя часть: номер уровня и название
         arcade.draw_text(
-            data['name'],
-            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 150,
-            (accent[0], accent[1], accent[2]),
-            font_size=42,
+            f"— УРОВЕНЬ {data['level']} —",
+            SCREEN_WIDTH / 2, 580,
+            (255, 255, 255, 120),
+            font_size=16,
             anchor_x='center',
             anchor_y='center'
         )
 
-        # Подзаголовок
+        arcade.draw_text(
+            data['name'],
+            SCREEN_WIDTH / 2, 520,
+            (accent[0], accent[1], accent[2]),
+            font_size=44,
+            anchor_x='center',
+            anchor_y='center'
+        )
+
         if data.get('subtitle'):
             arcade.draw_text(
                 f"✦ {data['subtitle']} ✦",
-                SCREEN_WIDTH / 2, SCREEN_HEIGHT - 190,
-                (255, 255, 255, 120),
-                font_size=14,
+                SCREEN_WIDTH / 2, 475,
+                (255, 255, 255, 130),
+                font_size=15,
                 anchor_x='center',
                 anchor_y='center'
             )
 
+        # Разделитель
+        arcade.draw_line(60, 445, SCREEN_WIDTH - 60, 445, (255, 255, 255, 25), 1)
+
         # Психологическое описание
         psych = data.get('psychology', '')
         if psych:
-            # Разбиваем на строки по ~42 символа
             words = psych.split()
             lines = []
             current_line = ''
             for word in words:
-                if len(current_line) + len(word) + 1 > 42:
+                if len(current_line) + len(word) + 1 > 44:
                     lines.append(current_line)
                     current_line = word
                 else:
@@ -2428,12 +2501,12 @@ class PsychoBattle(arcade.Window):
             if current_line:
                 lines.append(current_line)
 
-            y_offset = SCREEN_HEIGHT - 260
+            y_offset = 415
             for line in lines:
                 arcade.draw_text(
                     line.strip(),
                     SCREEN_WIDTH / 2, y_offset,
-                    (255, 255, 255, 200),
+                    (220, 220, 255, 200),
                     font_size=12,
                     anchor_x='center',
                     anchor_y='center'
@@ -2443,25 +2516,35 @@ class PsychoBattle(arcade.Window):
         # Имя босса
         if data.get('boss_name'):
             arcade.draw_text(
-                f"👹 Босс: {data['boss_name']}",
-                SCREEN_WIDTH / 2, SCREEN_HEIGHT - 470,
-                (255, 68, 68, 180),
+                f"👹 Босс уровня: {data['boss_name']}",
+                SCREEN_WIDTH / 2, 140,
+                (255, 100, 100, 200),
                 font_size=16,
                 anchor_x='center',
                 anchor_y='center'
             )
 
-        # Кнопка "Вперёд!"
+        # Кнопка "Начать битву"
         btn_y = 60
-        is_hover = (SCREEN_WIDTH / 2 - 120 < self.mouse_x < SCREEN_WIDTH / 2 + 120 and
-                    btn_y - 25 < self.mouse_y < btn_y + 25)
-        btn_color = (accent[0], accent[1], accent[2]) if is_hover else (255, 255, 255, 40)
-        draw_rect_filled(SCREEN_WIDTH / 2, btn_y, 240, 50, btn_color)
+        btn_hover = (SCREEN_WIDTH / 2 - 130 < self.mouse_x < SCREEN_WIDTH / 2 + 130 and
+                     btn_y - 22 < self.mouse_y < btn_y + 22)
+        btn_color = (accent[0], accent[1], accent[2]) if btn_hover else (80, 80, 100, 180)
+        draw_rect_filled(SCREEN_WIDTH / 2, btn_y, 260, 44, btn_color)
         arcade.draw_text(
-            "🚀 ВПЕРЁД!",
+            "⚔️ ВПЕРЁД!",
             SCREEN_WIDTH / 2, btn_y,
-            (255, 255, 255),
-            font_size=22,
+            (255, 255, 255, 230),
+            font_size=20,
+            anchor_x='center',
+            anchor_y='center'
+        )
+
+        # Подсказка
+        arcade.draw_text(
+            "Нажми ПРОБЕЛ или ENTER",
+            SCREEN_WIDTH / 2, 20,
+            (255, 255, 255, 50),
+            font_size=9,
             anchor_x='center',
             anchor_y='center'
         )
@@ -2550,102 +2633,107 @@ class PsychoBattle(arcade.Window):
         )
 
     def draw_stats(self):
-        draw_rect_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, (0, 0, 0, 230))
+        draw_rect_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT, (0, 0, 0, 235))
 
+        # Заголовок
         arcade.draw_text(
             "📊 СТАТИСТИКА",
-            SCREEN_WIDTH / 2, SCREEN_HEIGHT - 50,
+            SCREEN_WIDTH / 2, 605,
             (108, 92, 231),
-            font_size=28,
+            font_size=26,
             anchor_x='center',
             anchor_y='center'
         )
 
         stats = self.load_stats()
 
-        lines = [
-            f"🎯 {stats.get('high_score', 0)} очков",
-            f"💀 {stats.get('total_kills', 0)} убито",
-            f"👹 {stats.get('total_bosses', 0)} боссов",
-            f"🔥 Комбо: {stats.get('max_combo', 0)}",
-            f"🏆 Уровень: {stats.get('max_level_reached', 1)}",
-            f"🛡️ Щиты: {stats.get('shield_used', 0)}",
-            f"🔴 Лазеры: {stats.get('laser_used', 0)}",
-            f"⏱ Игр: {stats.get('games_played', 0)}",
+        # Левая колонка — цифры
+        left_items = [
+            (f"🎯 {stats.get('high_score', 0)}", "очков"),
+            (f"💀 {stats.get('total_kills', 0)}", "убито"),
+            (f"👹 {stats.get('total_bosses', 0)}", "боссов"),
+        ]
+        # Правая колонка — цифры
+        right_items = [
+            (f"🔥 {stats.get('max_combo', 0)}", "комбо"),
+            (f"🏆 {stats.get('max_level_reached', 1)}", "уровень"),
+            (f"🎮 {stats.get('games_played', 0)}", "игр"),
         ]
 
+        y_pos = 555
+        for i in range(3):
+            # Левая
+            val, lbl = left_items[i]
+            arcade.draw_text(val, 70, y_pos, (108, 92, 231), font_size=16, anchor_x='center', anchor_y='center')
+            arcade.draw_text(lbl, 70, y_pos - 16, (255, 255, 255, 100), font_size=9, anchor_x='center', anchor_y='center')
+            # Правая
+            val, lbl = right_items[i]
+            arcade.draw_text(val, SCREEN_WIDTH - 70, y_pos, (108, 92, 231), font_size=16, anchor_x='center', anchor_y='center')
+            arcade.draw_text(lbl, SCREEN_WIDTH - 70, y_pos - 16, (255, 255, 255, 100), font_size=9, anchor_x='center', anchor_y='center')
+            y_pos -= 50
+
+        # Дата последней игры
         last_played = stats.get('last_played', '')
         if last_played:
-            lines.append(f"📅 {last_played}")
-
-        stats_y = SCREEN_HEIGHT - 100
-        for i, line in enumerate(lines):
-            col = (108, 92, 231) if i < 2 else (255, 255, 255, 200)
             arcade.draw_text(
-                line,
-                15, stats_y - i * 22,
-                col,
-                font_size=12,
-                anchor_x='left',
+                f"📅 {last_played}",
+                SCREEN_WIDTH / 2, y_pos - 5,
+                (255, 255, 255, 60),
+                font_size=10,
+                anchor_x='center',
                 anchor_y='center'
             )
 
-        stats_end_y = SCREEN_HEIGHT - 100 - len(lines) * 22
         # Разделитель
-        sep_y = stats_end_y - 15
-        arcade.draw_line(20, sep_y, SCREEN_WIDTH - 20, sep_y, (255, 255, 255, 30), 1)
+        sep_y = 330
+        arcade.draw_line(30, sep_y, SCREEN_WIDTH - 30, sep_y, (255, 255, 255, 25), 1)
+
+        # Заголовок достижений
+        unlocked_count = sum(1 for v in stats.get('achievements', {}).values() if v)
         arcade.draw_text(
-            "🏅 ДОСТИЖЕНИЯ",
-            SCREEN_WIDTH / 2, sep_y - 22,
+            f"🏅 ДОСТИЖЕНИЯ  ({unlocked_count}/{len(ACHIEVEMENTS)})",
+            SCREEN_WIDTH / 2, sep_y - 25,
             (255, 215, 0, 180),
-            font_size=14,
+            font_size=13,
             anchor_x='center',
             anchor_y='center'
         )
 
-        # Список достижений
+        # Список достижений — две колонки
         saved_achievements = stats.get('achievements', {})
-        ach_y = sep_y - 50
-        for ach in ACHIEVEMENTS:
+        ach_y = sep_y - 55
+        half = (len(ACHIEVEMENTS) + 1) // 2
+
+        for idx, ach in enumerate(ACHIEVEMENTS):
+            col = 0 if idx < half else 1
+            row = idx if idx < half else idx - half
+            x_base = 20 if col == 0 else SCREEN_WIDTH // 2 + 5
+            y_base = ach_y - row * 19
+
             unlocked = saved_achievements.get(ach['id'], False)
             if unlocked:
-                icon = f"{ach['icon']}"
-                text = f"{ach['name']} — {ach['desc']}"
+                icon = ach['icon']
+                text = ach['name']
                 color = (100, 255, 150, 200)
             else:
                 icon = "🔒"
-                text = f"{ach['name']}"
-                color = (100, 100, 100, 150)
+                text = ach['name']
+                color = (90, 90, 90, 150)
 
-            arcade.draw_text(
-                icon,
-                25, ach_y,
-                color,
-                font_size=12,
-                anchor_x='left',
-                anchor_y='center'
-            )
-            arcade.draw_text(
-                text,
-                50, ach_y,
-                color,
-                font_size=11,
-                anchor_x='left',
-                anchor_y='center'
-            )
-            ach_y -= 20
+            arcade.draw_text(icon, x_base, y_base, color, font_size=11, anchor_x='left', anchor_y='center')
+            arcade.draw_text(text, x_base + 22, y_base, color, font_size=10, anchor_x='left', anchor_y='center')
 
         # Кнопка "Назад"
-        btn_y = 40
+        btn_y = 30
         is_hover = (SCREEN_WIDTH / 2 - 100 < self.mouse_x < SCREEN_WIDTH / 2 + 100 and
-                    btn_y - 20 < self.mouse_y < btn_y + 20)
-        color = (108, 92, 231) if is_hover else (255, 255, 255, 50)
-        draw_rect_filled(SCREEN_WIDTH / 2, btn_y, 200, 40, color)
+                    btn_y - 18 < self.mouse_y < btn_y + 18)
+        btn_color = (108, 92, 231) if is_hover else (255, 255, 255, 30)
+        draw_rect_filled(SCREEN_WIDTH / 2, btn_y, 200, 36, btn_color)
         arcade.draw_text(
             "← НАЗАД",
             SCREEN_WIDTH / 2, btn_y,
             (255, 255, 255),
-            font_size=18,
+            font_size=16,
             anchor_x='center',
             anchor_y='center'
         )
@@ -2785,8 +2873,8 @@ class PsychoBattle(arcade.Window):
             return
 
         if self.show_level_intro:
-            if (SCREEN_WIDTH / 2 - 120 < x < SCREEN_WIDTH / 2 + 120 and
-                    35 < y < 85):
+            if (SCREEN_WIDTH / 2 - 130 < x < SCREEN_WIDTH / 2 + 130 and
+                    38 < y < 82):
                 self.show_level_intro = False
                 self._start_music(self.level)
                 self.show_affirmation(
@@ -2843,8 +2931,16 @@ class PsychoBattle(arcade.Window):
         self.game_over = False
         self.victory = False
         self.show_main_menu = False
-        self.show_affirmation("🔄 НОВАЯ ИГРА!", "Ты сильнее, чем думаешь")
-        self._start_music(1)
+        # Показать экран вступления для 1-го уровня
+        self.show_level_intro = True
+        self.level_intro_data = {
+            'level': 1,
+            'name': self.current_level_data['name'],
+            'subtitle': self.current_level_data.get('subtitle', ''),
+            'psychology': self.current_level_data.get('psychology', ''),
+            'boss_name': self.current_level_data['boss']['name'],
+        }
+        self._play_sfx('boss_warning')
 
     def go_to_menu(self):
         self._stop_music()

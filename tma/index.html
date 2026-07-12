@@ -1380,28 +1380,49 @@ function drawPlayer() {
   const pulse = 1 + 0.03*Math.sin(G.totalFrame*0.06);
   const tf = G.totalFrame;
 
-  // Neural glow aura
-  const glowA = Math.floor(30 + 15*Math.sin(tf*0.05));
-  ctx.fillStyle = `rgba(100,200,255,${glowA/255})`;
-  ctx.beginPath(); ctx.arc(px, py, PLAYER_RADIUS*5*pulse, 0, Math.PI*2); ctx.fill();
+  // Neural glow aura — layered
+  for (let r=3; r>=0; r--) {
+    const radius = PLAYER_RADIUS * (3 + r*0.8) * pulse;
+    const a = Math.floor((25 + 20*Math.sin(tf*0.05)) / (r+1));
+    ctx.fillStyle = `rgba(60,160,255,${a/255})`;
+    ctx.beginPath(); ctx.arc(px, py, radius, 0, Math.PI*2); ctx.fill();
+  }
 
-  // Neural connections
-  for (let i=0; i<6; i++) {
-    const a = i*Math.PI/3 + tf*0.01;
-    const dist = PLAYER_RADIUS*(2.5 + 0.3*Math.sin(tf*0.03+i));
+  // Neural connections — 8 lines
+  const nPoints = [];
+  for (let i=0; i<8; i++) {
+    const a = i*Math.PI/4 + tf*0.008;
+    const dist = PLAYER_RADIUS*(2.2 + 0.4*Math.sin(tf*0.025 + i*0.9));
     const tx = px + Math.cos(a)*dist;
     const ty = py + Math.sin(a)*dist;
-    const na = Math.floor(15 + 10*Math.sin(tf*0.04));
-    ctx.strokeStyle = `rgba(100,180,255,${na/255})`;
-    ctx.lineWidth = 1;
+    nPoints.push({x:tx, y:ty});
+    const na = Math.floor(20 + 15*Math.sin(tf*0.03 + i));
+    ctx.strokeStyle = `rgba(80,180,255,${na/255})`;
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(px + Math.cos(a)*PLAYER_RADIUS*0.8, py + Math.sin(a)*PLAYER_RADIUS*0.8);
+    ctx.moveTo(px + Math.cos(a)*PLAYER_RADIUS*0.7, py + Math.sin(a)*PLAYER_RADIUS*0.7);
     ctx.lineTo(tx, ty);
     ctx.stroke();
-    // Synapse
-    const sa = Math.floor(60 + 40*Math.sin(tf*0.07+i*1.5));
-    ctx.fillStyle = `rgba(150,220,255,${sa/255})`;
-    ctx.beginPath(); ctx.arc(tx, ty, 2, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Interconnections (grid)
+  for (let i=0; i<nPoints.length; i++) {
+    for (let j=i+1; j<nPoints.length; j++) {
+      if (j-i <= 2) {
+        const na = Math.floor(8 + 6*Math.sin(tf*0.02 + i + j));
+        ctx.strokeStyle = `rgba(60,140,255,${na/255})`;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(nPoints[i].x, nPoints[i].y); ctx.lineTo(nPoints[j].x, nPoints[j].y); ctx.stroke();
+      }
+    }
+  }
+
+  // Synapse dots
+  for (let i=0; i<8; i++) {
+    const sa = Math.floor(50 + 50*Math.sin(tf*0.06 + i*1.3));
+    const ss = 1.5 + 0.8*Math.sin(tf*0.05 + i*2);
+    ctx.fillStyle = `rgba(140,220,255,${sa/255})`;
+    ctx.beginPath(); ctx.arc(nPoints[i].x, nPoints[i].y, ss, 0, Math.PI*2); ctx.fill();
   }
 
   // shield
@@ -1420,32 +1441,51 @@ function drawPlayer() {
     ctx.beginPath(); ctx.arc(px, py-PLAYER_RADIUS-10, 10, 0, angle*Math.PI/180); ctx.stroke();
   }
 
+  // Shadow under brain
+  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  ctx.beginPath(); ctx.ellipse(px, py-8, PLAYER_RADIUS*0.9*pulse, PLAYER_RADIUS*0.6*pulse, 0, 0, Math.PI*2); ctx.fill();
+
   // brain hemispheres
-  ctx.fillStyle = '#ff8a80'; ctx.beginPath(); ctx.ellipse(px-6, py, 11, 14, 0, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#f06292'; ctx.beginPath(); ctx.ellipse(px+6, py, 11, 14, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#ff8a80'; ctx.beginPath(); ctx.ellipse(px-7, py, 11, 14.8, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#f06292'; ctx.beginPath(); ctx.ellipse(px+7, py, 11, 14.8, 0, 0, Math.PI*2); ctx.fill();
   // groove
-  ctx.fillStyle = 'rgba(200,100,120,0.3)'; ctx.beginPath(); ctx.ellipse(px, py-2, 3, 12, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(180,80,110,0.35)'; ctx.beginPath(); ctx.ellipse(px, py-2, 2.5, 12.6, 0, 0, Math.PI*2); ctx.fill();
+  // Convolutions (lines on hemispheres)
+  for (let i=0; i<3; i++) {
+    const off = (i-1)*5;
+    const yy = py + (i-1)*6;
+    const ca = Math.floor(40 + 20*Math.sin(tf*0.04 + i));
+    ctx.strokeStyle = `rgba(200,100,120,${ca/255})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px-7+off-6, yy); ctx.lineTo(px-7+off+6, yy); ctx.stroke();
+    ctx.strokeStyle = `rgba(190,90,110,${Math.floor(40+20*Math.sin(tf*0.04+i+1))/255})`;
+    ctx.beginPath(); ctx.moveTo(px+7+off-6, yy); ctx.lineTo(px+7+off+6, yy); ctx.stroke();
+  }
   // highlights
-  const hl = Math.floor(40 + 20*Math.sin(tf*0.05));
+  const hl = Math.floor(40 + 25*Math.sin(tf*0.05));
   ctx.fillStyle = `rgba(255,255,255,${hl/255})`;
-  ctx.beginPath(); ctx.ellipse(px-6, py-4, 5, 4, 0, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = `rgba(255,255,255,${Math.floor(40+20*Math.sin(tf*0.05+1))/255})`;
-  ctx.beginPath(); ctx.ellipse(px+6, py-4, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(px-7, py-5, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = `rgba(255,255,255,${Math.floor(40+25*Math.sin(tf*0.05+1))/255})`;
+  ctx.beginPath(); ctx.ellipse(px+7, py-5, 5, 4, 0, 0, Math.PI*2); ctx.fill();
   // pupils
-  const ep = Math.floor(80 + 30*Math.sin(tf*0.06));
-  ctx.fillStyle = `rgba(255,100,150,${ep/255})`;
+  const ep = Math.floor(80 + 40*Math.sin(tf*0.06));
+  ctx.fillStyle = `rgba(255,80,130,${ep/255})`;
   ctx.beginPath(); ctx.arc(px-6, py-3, 4, 0, Math.PI*2); ctx.fill();
   ctx.beginPath(); ctx.arc(px+6, py-3, 4, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.beginPath(); ctx.arc(px-6, py-4, 2, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(px+6, py-4, 2, 0, Math.PI*2); ctx.fill();
 
   // Neural sparks around brain
-  for (let i=0; i<3; i++) {
-    const sa = tf*0.05 + i*Math.PI*2/3;
-    const sd = PLAYER_RADIUS*1.3;
+  for (let i=0; i<5; i++) {
+    const sa = tf*0.04 + i*Math.PI*2/5;
+    const sd = PLAYER_RADIUS*(1.1 + 0.3*Math.sin(tf*0.03 + i));
     const sx = px + Math.cos(sa)*sd;
     const sy = py + Math.sin(sa)*sd;
-    const spa = Math.floor(40 + 40*Math.sin(tf*0.08+i*2));
-    ctx.fillStyle = `rgba(200,230,255,${spa/255})`;
-    ctx.beginPath(); ctx.arc(sx, sy, 1.5, 0, Math.PI*2); ctx.fill();
+    const spa = Math.floor(30 + 50*Math.sin(tf*0.07 + i*2));
+    const sps = 1.2 + 0.8*Math.sin(tf*0.06 + i*1.5);
+    ctx.fillStyle = `rgba(180,230,255,${spa/255})`;
+    ctx.beginPath(); ctx.arc(sx, sy, sps, 0, Math.PI*2); ctx.fill();
   }
 }
 
@@ -1483,19 +1523,38 @@ function drawEnemies() {
       });
     }
 
-    // Pulsing glow
-    const glowPulse = 1 + 0.08 * Math.sin(tf * 0.04 + e.wobble || 0);
-    const glowA = Math.floor((e.hitTimer === 0 ? 80 : 200) * glowPulse);
-    ctx.fillStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${Math.min(glowA,255)/255})`;
-    ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 3.5 * (1 + 0.05 * Math.sin(tf * 0.03 + (e.wobble||0))), 0, Math.PI*2); ctx.fill();
+    // Multi-layer pulsating glow
+    for (let g=0; g<3; g++) {
+      const gr = e.r * (2.5 + g*0.8) * (1 + 0.04*Math.sin(tf*0.03 + (e.wobble||0) + g));
+      const ga = (e.hitTimer === 0 ? 80 : 200) / (g+2);
+      const ga2 = Math.min(ga|0, 180);
+      ctx.fillStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${ga2/255})`;
+      ctx.beginPath(); ctx.arc(e.x, e.y, gr, 0, Math.PI*2); ctx.fill();
+    }
 
     // Ring aura for special types
     if (e.special_type) {
-      const ringA = Math.floor(60 + 40 * Math.sin(tf * 0.05 + (e.wobble||0)));
+      const ringA = Math.floor(70 + 50 * Math.sin(tf * 0.05 + (e.wobble||0)));
       ctx.strokeStyle = `rgba(${e.color[0]},${e.color[1]},${e.color[2]},${ringA/255})`;
       ctx.lineWidth = 2;
       ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 2.2 + 3 * Math.sin(tf * 0.04 + (e.wobble||0)), 0, Math.PI*2); ctx.stroke();
+      // Type label
+      ctx.fillStyle = `rgba(255,255,255,${ringA/510})`;
+      ctx.font = '7px sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(e.special_type.toUpperCase(), e.x, e.y + e.r + 8);
     }
+
+    // Hit flash
+    if (e.hitTimer > 0) {
+      const flashA = Math.floor(100 * (e.hitTimer / 10));
+      ctx.fillStyle = `rgba(255,255,255,${flashA/255})`;
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.r * 1.5, 0, Math.PI*2); ctx.fill();
+    }
+
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.beginPath(); ctx.ellipse(e.x, e.y - e.r*0.8, e.r*0.75, 2, 0, 0, Math.PI*2); ctx.fill();
 
     // Hit bounce
     let hitScale = 1.0;
@@ -1530,26 +1589,38 @@ function drawBoss() {
   if (!G.bossActive || !G.boss) return;
   const b = G.boss;
   const sc = b.scale;
-  ctx.save();
-  ctx.translate(b.x, b.y);
+  const tf = G.totalFrame;
 
-  // glow
-  ctx.fillStyle = `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${b.hitTimer?0.8:0.4})`;
-  ctx.beginPath(); ctx.arc(0, 0, b.r*6*sc, 0, Math.PI*2); ctx.fill();
-
-  // rings
-  for (let ri=0; ri<3; ri++) {
-    const ring = b.r*(2+ri*0.8)*sc + Math.sin(G.totalFrame*(0.03+ri*0.01)+ri*1.5)*(8+ri*3);
-    ctx.strokeStyle = `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${0.12-ri*0.03})`;
-    ctx.lineWidth = 2-ri*0.4;
-    ctx.beginPath(); ctx.arc(0,0,ring,0,Math.PI*2); ctx.stroke();
+  // Multi-layer blinding glow
+  const glowA = b.hitTimer ? 220 : 120;
+  for (let g=0; g<4; g++) {
+    const gr = b.r * (4 + g*1.2) * sc + Math.sin(tf * (0.02 + g*0.008)) * 10;
+    const ga = Math.floor(glowA / (g+1));
+    ctx.fillStyle = `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${ga/255})`;
+    ctx.beginPath(); ctx.arc(b.x, b.y, gr, 0, Math.PI*2); ctx.fill();
   }
 
-  ctx.font = `${b.r*3*sc}px sans-serif`;
-  ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(b.emoji, 0, 0);
+  // Pulsing rings at different frequencies
+  for (let ri=0; ri<4; ri++) {
+    const ring = b.r*(1.8+ri*0.7)*sc + Math.sin(tf*(0.025+ri*0.012)+ri*1.2)*(10+ri*4);
+    const ra = Math.max(40 - ri*9, 5);
+    ctx.strokeStyle = `rgba(${b.color[0]},${b.color[1]},${b.color[2]},${ra/255})`;
+    ctx.lineWidth = Math.max(1.5 - ri*0.3, 0.5);
+    ctx.beginPath(); ctx.arc(b.x, b.y, ring, 0, Math.PI*2); ctx.stroke();
+  }
 
-  ctx.restore();
+  // Inner glow
+  ctx.fillStyle = `rgba(${b.color[0]},${b.color[1]},${b.color[2]},0.3)`;
+  ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.6*sc, 0, Math.PI*2); ctx.fill();
+
+  // Shadow under boss
+  ctx.fillStyle = 'rgba(0,0,0,0.2)';
+  ctx.beginPath(); ctx.ellipse(b.x, b.y - b.r*1.5*sc, b.r*1.25*sc, 3, 0, 0, Math.PI*2); ctx.fill();
+
+  // Boss emoji with pulse
+  ctx.font = `${b.r*3.2*sc}px sans-serif`;
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(b.emoji, b.x, b.y);
 
   // name
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
@@ -1666,47 +1737,59 @@ function drawProgress() {
 }
 
 function drawLevelIntro() {
-  rectFilled(W/2, H/2, W, H, [0,0,0,0.9]);
+  rectFilled(W/2, H/2, W, H, [0,0,0,0.94]);
   if (!G.levelIntroData) return;
   const data = G.levelIntroData;
   const ac = G.currentLevel.accent;
 
-  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font='18px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(`🌌 УРОВЕНЬ ${data.level}`, W/2, H-100);
+  // Level number
+  ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='16px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(`— УРОВЕНЬ ${data.level} —`, W/2, 580);
 
-  ctx.fillStyle = `rgb(${ac[0]},${ac[1]},${ac[2]})`; ctx.font='42px sans-serif';
-  ctx.fillText(data.name, W/2, H-150);
+  // Name
+  ctx.fillStyle = `rgb(${ac[0]},${ac[1]},${ac[2]})`; ctx.font='44px sans-serif';
+  ctx.fillText(data.name, W/2, 520);
 
   if (data.subtitle) {
-    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='14px sans-serif';
-    ctx.fillText(`✦ ${data.subtitle} ✦`, W/2, H-190);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font='15px sans-serif';
+    ctx.fillText(`✦ ${data.subtitle} ✦`, W/2, 475);
   }
 
+  // Separator
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(60, 448); ctx.lineTo(W-60, 448); ctx.stroke();
+
+  // Psychology
   if (data.psychology) {
     const words = data.psychology.split(' ');
     const lines = [];
     let cur = '';
     words.forEach(w => {
-      if ((cur + ' ' + w).length > 42) { lines.push(cur); cur = w; }
+      if ((cur + ' ' + w).length > 44) { lines.push(cur); cur = w; }
       else cur = cur ? cur + ' ' + w : w;
     });
     if (cur) lines.push(cur);
-    let yo = H - 260;
-    ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.font='12px sans-serif';
+    let yo = 418;
+    ctx.fillStyle = 'rgba(220,220,255,0.8)'; ctx.font='12px sans-serif';
     lines.forEach(l => { ctx.fillText(l.trim(), W/2, yo); yo -= 22; });
   }
 
+  // Boss name
   if (data.boss_name) {
-    ctx.fillStyle = 'rgba(255,68,68,0.7)'; ctx.font='16px sans-serif';
-    ctx.fillText(`👹 Босс: ${data.boss_name}`, W/2, H-470);
+    ctx.fillStyle = 'rgba(255,100,100,0.8)'; ctx.font='16px sans-serif';
+    ctx.fillText(`👹 Босс уровня: ${data.boss_name}`, W/2, 140);
   }
 
   // Continue button
   const btnY = 60;
-  const hover = G.mouseX>W/2-120 && G.mouseX<W/2+120 && G.mouseY>btnY-25 && G.mouseY<btnY+25;
-  rectFilled(W/2, btnY, 240, 50, hover ? [ac[0],ac[1],ac[2]] : [255,255,255,0.15]);
-  ctx.fillStyle='#fff'; ctx.font='22px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('🚀 ВПЕРЁД!', W/2, btnY);
+  const hover = G.mouseX>W/2-130 && G.mouseX<W/2+130 && G.mouseY>btnY-22 && G.mouseY<btnY+22;
+  rectFilled(W/2, btnY, 260, 44, hover ? [ac[0],ac[1],ac[2]] : [80,80,100,0.7]);
+  ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.font='20px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('⚔️ ВПЕРЁД!', W/2, btnY);
+
+  // Hint
+  ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.font='9px sans-serif';
+  ctx.fillText('Нажми ПРОБЕЛ или ENTER', W/2, 20);
 }
 
 function drawAffirmation() {
@@ -1818,56 +1901,80 @@ function drawMainMenu() {
 }
 
 function drawStats() {
-  rectFilled(W/2, H/2, W, H, [0,0,0,0.9]);
-  ctx.fillStyle='rgb(108,92,231)'; ctx.font='28px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText('📊 СТАТИСТИКА', W/2, H-50);
+  rectFilled(W/2, H/2, W, H, [0,0,0,0.92]);
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+
+  // Title
+  ctx.fillStyle='rgb(108,92,231)'; ctx.font='26px sans-serif';
+  ctx.fillText('📊 СТАТИСТИКА', W/2, 605);
 
   const s = G.stats;
-  const lines = [
-    `🎯 ${s.highScore||0} очков`,
-    `💀 ${s.totalKills||0} убито`,
-    `👹 ${s.totalBosses||0} боссов`,
-    `🔥 Комбо: ${s.maxCombo||0}`,
-    `🏆 Уровень: ${s.maxLevelReached||1}`,
-    `🎮 Игр: ${s.gamesPlayed||0}`,
+
+  // Left column
+  const leftItems = [
+    {val: s.highScore||0, lbl: 'очков'},
+    {val: s.totalKills||0, lbl: 'убито'},
+    {val: s.totalBosses||0, lbl: 'боссов'},
   ];
-  let yo = H-100;
-  ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='12px sans-serif';
-  lines.forEach((l, i) => {
-    ctx.fillStyle = i < 2 ? 'rgb(108,92,231)' : 'rgba(255,255,255,0.8)';
-    ctx.fillText(l, 15, yo);
-    yo -= 22;
-  });
+  // Right column
+  const rightItems = [
+    {val: s.maxCombo||0, lbl: 'комбо'},
+    {val: s.maxLevelReached||1, lbl: 'уровень'},
+    {val: s.gamesPlayed||0, lbl: 'игр'},
+  ];
+
+  let yPos = 555;
+  for (let i=0; i<3; i++) {
+    // Left
+    ctx.fillStyle = 'rgb(108,92,231)'; ctx.font='16px sans-serif';
+    ctx.fillText(`${leftItems[i].val}`, 70, yPos);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font='9px sans-serif';
+    ctx.fillText(leftItems[i].lbl, 70, yPos-16);
+    // Right
+    ctx.fillStyle = 'rgb(108,92,231)'; ctx.font='16px sans-serif';
+    ctx.fillText(`${rightItems[i].val}`, W-70, yPos);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)'; ctx.font='9px sans-serif';
+    ctx.fillText(rightItems[i].lbl, W-70, yPos-16);
+    yPos -= 50;
+  }
 
   // Separator
-  const sepY = yo - 10;
-  ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(20, sepY); ctx.lineTo(W-20, sepY); ctx.stroke();
-  ctx.fillStyle='rgba(255,215,0,0.7)'; ctx.font='14px sans-serif'; ctx.textAlign='center';
-  ctx.fillText('🏅 ДОСТИЖЕНИЯ', W/2, sepY-22);
+  const sepY = 330;
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(30, sepY); ctx.lineTo(W-30, sepY); ctx.stroke();
 
-  // Achievements list
-  let achY = sepY - 50;
+  // Achievements header
+  const unlocked = Object.values(G.achievements||{}).filter(v=>v).length;
+  ctx.fillStyle='rgba(255,215,0,0.7)'; ctx.font='13px sans-serif';
+  ctx.fillText(`🏅 ДОСТИЖЕНИЯ  (${unlocked}/${ACHIEVEMENTS.length})`, W/2, sepY-25);
+
+  // Two-column achievements
+  const half = Math.ceil(ACHIEVEMENTS.length / 2);
+  let achY = sepY - 55;
   ctx.textAlign='left';
-  ACHIEVEMENTS.forEach(ach => {
-    const unlocked = G.achievements[ach.id] || false;
-    if (unlocked) {
-      ctx.fillStyle = 'rgba(100,255,150,0.8)'; ctx.font='12px sans-serif';
-      ctx.fillText(ach.icon, 25, achY);
-      ctx.fillText(`${ach.name} — ${ach.desc}`, 50, achY);
+  ACHIEVEMENTS.forEach((ach, idx) => {
+    const col = idx < half ? 0 : 1;
+    const row = idx < half ? idx : idx - half;
+    const xBase = col === 0 ? 20 : W/2 + 5;
+    const yBase = achY - row * 19;
+
+    const unlockedAchievement = G.achievements[ach.id] || false;
+    if (unlockedAchievement) {
+      ctx.fillStyle = 'rgba(100,255,150,0.8)'; ctx.font='11px sans-serif';
+      ctx.fillText(ach.icon, xBase, yBase);
+      ctx.fillText(ach.name, xBase + 22, yBase);
     } else {
-      ctx.fillStyle = 'rgba(100,100,100,0.6)'; ctx.font='11px sans-serif';
-      ctx.fillText('🔒', 25, achY);
-      ctx.fillText(ach.name, 50, achY);
+      ctx.fillStyle = 'rgba(90,90,90,0.6)'; ctx.font='10px sans-serif';
+      ctx.fillText('🔒', xBase, yBase);
+      ctx.fillText(ach.name, xBase + 22, yBase);
     }
-    achY -= 20;
   });
 
   // Back button
-  const btnY=40;
-  const hover = G.mouseX>W/2-100 && G.mouseX<W/2+100 && G.mouseY>btnY-20 && G.mouseY<btnY+20;
-  rectFilled(W/2, btnY, 200, 40, hover?[108,92,231]:[255,255,255,0.2]);
-  ctx.fillStyle='#fff'; ctx.font='18px sans-serif'; ctx.textAlign='center';
+  const btnY=30;
+  const hover = G.mouseX>W/2-100 && G.mouseX<W/2+100 && G.mouseY>btnY-18 && G.mouseY<btnY+18;
+  rectFilled(W/2, btnY, 200, 36, hover?[108,92,231]:[255,255,255,0.12]);
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.font='16px sans-serif';
   ctx.fillText('← НАЗАД', W/2, btnY);
 }
 
@@ -1960,7 +2067,7 @@ canvas.addEventListener('mousedown', e => {
     return;
   }
   if (G.showLevelIntro) {
-    if (G.mouseX>W/2-120 && G.mouseX<W/2+120 && G.mouseY>35 && G.mouseY<85) {
+    if (G.mouseX>W/2-130 && G.mouseX<W/2+130 && G.mouseY>38 && G.mouseY<82) {
       G.showLevelIntro = false;
       showAffirmation(`🌌 УРОВЕНЬ ${G.level}: ${G.currentLevel.name}`, 'Ты справишься!');
     }
@@ -2076,9 +2183,15 @@ function restartGame() {
   G.gameOver = false;
   G.victory = false;
   G.showMainMenu = false;
-  showAffirmation('🔄 НОВАЯ ИГРА!', 'Ты сильнее, чем думаешь');
-  // Reset player position
-  G.player.y = 20;
+  // Show level intro for level 1
+  G.showLevelIntro = true;
+  G.levelIntroData = {
+    level: 1,
+    name: G.currentLevel.name,
+    subtitle: G.currentLevel.subtitle || '',
+    psychology: G.currentLevel.psychology || '',
+    boss_name: G.currentLevel.boss.name,
+  };
 }
 
 function goToMenu() {
