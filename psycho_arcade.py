@@ -2085,8 +2085,21 @@ class PsychoBattle(arcade.Window):
             # Тень под врагом
             arcade.draw_ellipse_filled(ex, ey - enemy.radius * 0.8, enemy.radius * 1.5, 4, (0, 0, 0, 30))
 
-            # Сам враг
+            # Сам враг — тёмная обводка для читаемости на любом фоне
             size = int(enemy.radius * 1.8 * hit_scale)
+            # Тень (обводка)
+            for dx, dy in [(-1, -1), (-1, 1), (1, -1), (1, 0), (-1, 0), (0, -1), (0, 1)]:
+                arcade.draw_text(
+                    enemy.emoji,
+                    int(ex) + dx, int(ey) + dy,
+                    (0, 0, 0, 200),
+                    font_size=size,
+                    anchor_x='center',
+                    anchor_y='center'
+                )
+            # Яркая подложка (белое свечение)
+            arcade.draw_circle_filled(ex, ey, enemy.radius * 1.2, (255, 255, 255, 30))
+            # Основной emoji
             arcade.draw_text(
                 enemy.emoji,
                 int(ex), int(ey),
@@ -2162,8 +2175,21 @@ class PsychoBattle(arcade.Window):
             (0, 0, 0, 50)
         )
 
-        # Эмодзи босса с пульсацией — чёткий рендер
+        # Эмодзи босса — тёмная обводка для читаемости
         size = int(b.radius * 2.6 * b.scale)
+        # Тень (обводка)
+        for dx, dy in [(-2, -2), (-2, 2), (2, -2), (2, 2), (-2, 0), (2, 0), (0, -2), (0, 2)]:
+            arcade.draw_text(
+                b.emoji,
+                int(b.x) + dx, int(b.y) + dy,
+                (0, 0, 0, 200),
+                font_size=size,
+                anchor_x='center',
+                anchor_y='center'
+            )
+        # Яркая подложка
+        arcade.draw_circle_filled(b.x, b.y, b.radius * 1.5 * b.scale, (255, 255, 255, 25))
+        # Основной emoji
         arcade.draw_text(
             b.emoji,
             int(b.x), int(b.y),

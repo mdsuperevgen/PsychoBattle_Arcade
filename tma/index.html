@@ -1563,6 +1563,13 @@ function drawEnemies() {
     const sz = Math.round(e.r * 2 * hitScale);
     ctx.font=`${sz}px sans-serif`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
+    // Яркая подложка
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath(); ctx.arc(e.x, e.y, e.r*1.2, 0, Math.PI*2); ctx.fill();
+    // Тёмная обводка
+    ctx.strokeStyle = 'rgba(0,0,0,0.8)'; ctx.lineWidth = 3;
+    ctx.strokeText(e.emoji, Math.round(e.x), Math.round(e.y));
+    // Основной emoji
     ctx.fillText(e.emoji, Math.round(e.x), Math.round(e.y));
 
     // Shield double outline
@@ -1617,9 +1624,16 @@ function drawBoss() {
   ctx.fillStyle = 'rgba(0,0,0,0.2)';
   ctx.beginPath(); ctx.ellipse(b.x, b.y - b.r*1.5*sc, b.r*1.25*sc, 3, 0, 0, Math.PI*2); ctx.fill();
 
-  // Boss emoji with pulse — crisp rendering
+  // Boss emoji with pulse — crisp rendering + stroke for visibility
   ctx.font = `${Math.round(b.r*3.2*sc)}px sans-serif`;
   ctx.textAlign='center'; ctx.textBaseline='middle';
+  // Яркая подложка
+  ctx.fillStyle = 'rgba(255,255,255,0.1)';
+  ctx.beginPath(); ctx.arc(b.x, b.y, b.r*1.5*sc, 0, Math.PI*2); ctx.fill();
+  // Тёмная обводка
+  ctx.strokeStyle = 'rgba(0,0,0,0.85)'; ctx.lineWidth = 4;
+  ctx.strokeText(b.emoji, Math.round(b.x), Math.round(b.y));
+  // Основной emoji
   ctx.fillText(b.emoji, Math.round(b.x), Math.round(b.y));
 
   // name
